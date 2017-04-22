@@ -127,7 +127,7 @@ void do_banked_movement() {
 
 	currentSpriteId = PLAYER_SPRITE_ID;
 	scratch = PLAYER_SPRITE_TILE + ((playerAnimState & 0x04) >> 1) + playerDirection;
-	if (playerVelocityLockTime && FRAME_COUNTER & 0x01)
+	if (playerVelocityLockTime && FRAME_COUNTER & 0x02)
 		scratch = PLAYER_SPRITE_EMPTY;
 	currentSpriteId = oam_spr(playerX, playerY, scratch, 0, PLAYER_SPRITE_ID);
 	currentSpriteId = oam_spr(playerX+8, playerY, scratch+1, 0, currentSpriteId);

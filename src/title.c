@@ -1,14 +1,23 @@
 #include "src/globals.h"
 #include "lib/neslib.h"
+#include "lib/boilerplate.h"
 #include "bin/build_info.h"
 #pragma rodataseg ("ROM_00")
 #pragma codeseg ("ROM_00")
 
 // TODO: We have a nice way to fade our palette. Can we do that please?
 void show_title() {
+
+	set_chr_bank_0(CHR_BANK_TITLE);
+	set_chr_bank_1(CHR_BANK_TITLE+1);
+	ppu_off();
+	clear_screen();
+	pal_col(1,0x19);//set dark green color
+	pal_col(17,0x19);
+
 	// Show a message to the user.
-	put_str(NTADR_A(2,8), "SMALL WORLD!");
-	put_str(NTADR_A(2,12), "Ludum Dare 38 Game");
+	put_str(NTADR_A(2,8), "  - Missing Lands -");
+	put_str(NTADR_A(2,12), "Ludum Dare 38 Entry");
 	put_str(NTADR_A(2,13), "Press Start!");
 
 	// Also show some cool build info because we can.
@@ -28,15 +37,15 @@ void show_title() {
 
 	ppu_off();
 	clear_screen();
-	put_str(NTADR_A(2, 8), "SMALL WORLD!");
+	put_str(NTADR_A(2,  8), "    - Missing Lands -     ");
 	put_str(NTADR_A(2, 12), "You are a tiny frog trapped");
-	put_str(NTADR_A(2, 13), "in a small world.");
+	put_str(NTADR_A(2, 13), "in a tiny world.");
 	put_str(NTADR_A(2, 16), "You remember a time where");
 	put_str(NTADR_A(2, 17), "the world was great.");
-	put_str(NTADR_A(2, 20), "Pieces of the world are");
+	put_str(NTADR_A(2, 20), "The former lands are");
 	put_str(NTADR_A(2, 21), "scattered around you. Can");
-	put_str(NTADR_A(2, 22), "you restore the world to its");
-	put_str(NTADR_A(2, 23), "former glory?");
+	put_str(NTADR_A(2, 22), "you restore this world to");
+	put_str(NTADR_A(2, 23), "its former glory?");
 	ppu_on_all();
 
 	while (1) {
@@ -49,4 +58,35 @@ void show_title() {
 		
 	
 }
+
+void show_game_over() {
+	oam_hide_rest(0);
+	ppu_off();
+	clear_screen();
+
+	set_chr_bank_0(CHR_BANK_TITLE);
+	set_chr_bank_1(CHR_BANK_TITLE+1);
+	pal_col(1,0x19);//set dark green color
+	pal_col(17,0x19);
+
+
+	// Show a message to the user.
+	put_str(NTADR_A(2,8), "GAME OVER!");
+	put_str(NTADR_A(2,12), "You died...");
+	put_str(NTADR_A(2,17), "- Press Start -");
+
+
+	ppu_on_all();
+
+	// Wait for start
+	while (1) {
+		currentPadState = pad_trigger(0);
+		if (currentPadState & PAD_START) {
+			break;
+		}
+		ppu_wait_nmi();
+	}		
+	
+}
+
 

@@ -24,6 +24,7 @@
 #define GAME_STATE_RUNNING 0
 #define GAME_STATE_REDRAW 1
 #define GAME_STATE_WORLD_MOVEMENT 2
+#define GAME_STATE_INIT 255
 #define GAME_STATE_GAME_OVER 250
 
 #define LEVEL_FRAGMENT_1 0x01
@@ -43,6 +44,10 @@
 #define HUD_TOP 0xe5
 #define HUD_L 0xe6
 #define HUD_R 0xe7
+
+#define CHR_BANK_TITLE 0
+#define CHR_BANK_MAIN 2 // NOTE: We have two copies of the same 4k data in the 8k .chr files (because I'm lazy, ok?) so we use bank 2 to get the inverted one.
+
 
 
 // This file defines globals that can be used all over. You'll want common things in here, as the NES has very, very

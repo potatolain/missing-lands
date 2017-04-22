@@ -17,10 +17,6 @@
 #define BANK_SPRITES 1
 #define BANK_LEVEL_1 2
 
-// Ditto, same advice here.
-#define CHR_BANK_TITLE 0
-#define CHR_BANK_MAIN 2 // NOTE: We have two copies of the same 4k data in the 8k .chr files (because I'm lazy, ok?) so we use bank 2 to get the inverted one.
-
 #define DUMMY_SONG 0
 #define SFX_BOING 0 
 
@@ -95,37 +91,44 @@ void main(void) {
 	music_play(DUMMY_SONG);
 	music_pause(playMusic);
 
-	pal_col(1,0x19);//set dark green color
-	pal_col(17,0x19);
-
-	set_prg_bank(BANK_TITLE);
-	show_title();
-	bank_spr(1);
-	pal_bg(main_palette);
-	pal_spr(sprite_palette);
-	set_chr_bank_0(CHR_BANK_MAIN);
-	set_chr_bank_1(CHR_BANK_MAIN+1);
-
-	playerOverworldPosition = 26;
-	playerX = 80;
-	playerY = 80;
-
-	playerHealth = 5;
-	worldChunkCount = 0;
-
-	for (i = 0; i < 64; i++)
-		currentWorldData[i] = 0;
-
-	playerDirection = PLAYER_DIRECTION_DOWN;
-	// TODO: Fade anim goes here.
-	draw_level();
-	draw_sprites();
-	draw_hud();
-
+	gameState = GAME_STATE_INIT;
 
 	// Now we wait for input from the user, and do dumb things!
 	while(1) {
-		if (gameState == GAME_STATE_RUNNING) {
+		if (gameState == GAME_STATE_INIT) {
+
+			set_prg_bank(BANK_TITLE);
+			show_title();
+			bank_spr(1);
+			pal_bg(main_palette);
+			pal_spr(sprite_palette);
+			set_chr_bank_0(CHR_BANK_MAIN);
+			set_chr_bank_1(CHR_BANK_MAIN+1);
+
+			// TODO: Should be defined by the level...
+			playerOverworldPosition = 27;
+			playerX = 80;
+			playerY = 80;
+
+			playerHealth = 5;
+			worldChunkCount = 0;
+			playerDirection = PLAYER_DIRECTION_DOWN;
+			playerAnimState = 0;
+			playerXVelocity = 0;
+			playerYVelocity = 0;
+			playerVelocityLockTime = 0;
+
+
+			for (i = 0; i < 64; i++)
+				currentWorldData[i] = 0;
+
+			// TODO: Fade anim goes here.
+			draw_level();
+			draw_sprites();
+			draw_hud();
+			gameState = GAME_STATE_RUNNING;
+
+		} else if (gameState == GAME_STATE_RUNNING) {
 			staticPadState = pad_trigger(0);
 			currentPadState = pad_poll(0);
 			do_movement();
@@ -140,6 +143,9 @@ void main(void) {
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_GAME_OVER) {
 			// CRASH. FIXME: Don't do that.
+			set_prg_bank(BANK_TITLE);
+			show_game_over();
+			gameState = GAME_STATE_INIT;
 		}
 	}
 }
