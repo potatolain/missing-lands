@@ -9,8 +9,8 @@
 #define BANK_TITLE 0
 
 // Ditto, same advice here.
-#define CHR_BANK_0 0
-#define CHR_BANK_1 2 // NOTE: We have two copies of the same 4k data in the 8k .chr files (because I'm lazy, ok?) so we use bank 2 to get the inverted one.
+#define CHR_BANK_TITLE 0
+#define CHR_BANK_MAIN 2 // NOTE: We have two copies of the same 4k data in the 8k .chr files (because I'm lazy, ok?) so we use bank 2 to get the inverted one.
 
 #define DUMMY_SONG 0
 #define SFX_BOING 0 
@@ -26,6 +26,8 @@ static unsigned char playMusic;
 static unsigned char chrBank;
 static unsigned char mirrorMode;
 static char screenBuffer[20];
+
+void draw_level();
 
 void clear_screen() {
 	// Clear the screen to start
@@ -57,7 +59,7 @@ void write_screen_buffer(unsigned char x, unsigned char y, char* data) {
 void main(void) {
 
 	showMessageA = 0;
-	playMusic = 0;
+	playMusic = 1;
 	mirrorMode = MIRROR_HORIZONTAL;
 
 	// Queue up our dummy song and start playing it.
@@ -69,13 +71,26 @@ void main(void) {
 
 	set_prg_bank(BANK_TITLE);
 	show_title();
+	pal_bg(main_palette);
+	pal_spr(main_palette);
+	set_chr_bank_0(CHR_BANK_MAIN);
+	set_chr_bank_1(CHR_BANK_MAIN+1);
 
 	// TODO: Fade anim goes here.
-	
+	draw_level();
 
 	// Now we wait for input from the user, and do dumb things!
 	while(1) {
 		currentPadState = pad_trigger(0);
 		ppu_wait_nmi();
 	}
+}
+
+void draw_level() {
+	ppu_off();
+	vram_inc(0);
+	vram_adr(NAMETABLE_A);
+	vram_fill(2, 0x3c0);
+	vram_fill(0, 0x30);
+	ppu_on_all();
 }
