@@ -1,1 +1,1 @@
-extern const char lvl1[3072];
+extern const char lvl1[12288];

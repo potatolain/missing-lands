@@ -106,22 +106,28 @@ var fileContent = ".export _"+name+"\n_"+name+":\n";
 for (var x = 0; x < roomsWide; x++) {
 	for (var y = 0; y < roomsTall; y++) {
 		fileContent += "\n\n";
-		for (var yy = 0; yy < SCREEN_HEIGHT; yy++) {
-			fileContent += ".byte ";
-			for (var xx = 0; xx < SCREEN_WIDTH; xx++) {
-				// Dizzy yet?
-				if (xx != 0) {
-					fileContent += ", ";
+		if (x == 7 && y == 7) {
+			// HACK ATTACK
+			fileContent += "; No last room because rom space";
+		} else {
+
+			for (var yy = 0; yy < SCREEN_HEIGHT; yy++) {
+				fileContent += ".byte ";
+				for (var xx = 0; xx < SCREEN_WIDTH; xx++) {
+					// Dizzy yet?
+					if (xx != 0) {
+						fileContent += ", ";
+					}
+					fileContent += data[
+						(x * SCREEN_WIDTH) + (y * (roomsWide*SCREEN_WIDTH)*SCREEN_HEIGHT) + (yy * width) + xx
+					] - 1;
+					
 				}
-				fileContent += data[
-					(x * SCREEN_WIDTH) + (y * (roomsWide*SCREEN_WIDTH)*SCREEN_HEIGHT) + (yy * width) + xx
-				] - 1;
-				
+				fileContent += "\n";
 			}
-			fileContent += "\n";
-		}
-		for (var yy = SCREEN_HEIGHT; yy < SCREEN_HEIGHT_PADDED; yy++) {
-			fileContent += ".byte 0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0\n";
+			for (var yy = SCREEN_HEIGHT; yy < SCREEN_HEIGHT_PADDED; yy++) {
+				fileContent += ".byte 0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0\n";
+			}
 		}
 
 	}

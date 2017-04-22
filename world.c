@@ -24,6 +24,8 @@
 #define MAP_TILE_SIZE 192
 
 // Globals! Defined as externs in src/globals.h
+#pragma bssseg (push,"ZEROPAGE")
+#pragma dataseg(push,"ZEROPAGE")
 unsigned char currentPadState, staticPadState;
 unsigned char i;
 unsigned char j;
@@ -31,11 +33,16 @@ unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocit
 unsigned char playerOverworldPosition;
 unsigned char currentSpriteId;
 unsigned char gameState;
+unsigned char scratch, scratch2;
+unsigned int scratchInt;
+#pragma bssseg (pop)
+#pragma dataseg(pop)
+
+
 char currentMessage[16];
 char screenBuffer[0x30];
 char currentLevel[256];
-unsigned char scratch, scratch2;
-unsigned int scratchInt;
+char currentWorldData[64];
 
 
 // Local to this file.
@@ -94,9 +101,13 @@ void main(void) {
 	set_chr_bank_0(CHR_BANK_MAIN);
 	set_chr_bank_1(CHR_BANK_MAIN+1);
 
-	playerOverworldPosition = 0;
-	playerX = 50;
-	playerY = 50;
+	playerOverworldPosition = 27;
+	playerX = 80;
+	playerY = 80;
+
+	for (i = 0; i < 64; i++)
+		currentWorldData[i] = 0;
+
 	playerDirection = PLAYER_DIRECTION_DOWN;
 	// TODO: Fade anim goes here.
 	draw_level();
@@ -134,8 +145,22 @@ void draw_level() {
 }
 
 unsigned char test_collision(unsigned char tileId) {
-	switch (tileId & 0x3f) {
+	char temp = tileId & 0x3f;
+	if (temp >= LEVEL_FRAGMENT_1_TILES && temp < LEVEL_FRAGMENT_1_TILES+LEVEL_FRAGMENT_TILE_LEN) {
+		if (currentWorldData[playerOverworldPosition] & LEVEL_FRAGMENT_1)
+			temp -= LEVEL_FRAGMENT_TILE_LEN;
+	} else if (temp >= LEVEL_FRAGMENT_2_TILES && temp < LEVEL_FRAGMENT_2_TILES+LEVEL_FRAGMENT_TILE_LEN) {
+		if (currentWorldData[playerOverworldPosition] & LEVEL_FRAGMENT_2)
+			temp -= (LEVEL_FRAGMENT_TILE_LEN*2);
+	}
+
+	switch (temp) {
 		case 2:
+		case 21:
+		case 24: 
+		case 32:
+		case 29:
+		case 37:
 			return 1;
 		default:
 			return 0;
