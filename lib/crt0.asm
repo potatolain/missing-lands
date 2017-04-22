@@ -240,7 +240,7 @@ detectNTSC:
 	.include "lib/boilerplate.asm"
 	.include "graphics/palettes.asm"
 	; FIXME
-	.include "levels/processed/lvl1_tiles.asm"
+	.include "levels/all.asm"
 
 .segment "RODATA"
 
