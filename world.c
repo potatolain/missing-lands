@@ -102,7 +102,7 @@ void main(void) {
 	show_title();
 	bank_spr(1);
 	pal_bg(main_palette);
-	pal_spr(main_palette);
+	pal_spr(sprite_palette);
 	set_chr_bank_0(CHR_BANK_MAIN);
 	set_chr_bank_1(CHR_BANK_MAIN+1);
 
