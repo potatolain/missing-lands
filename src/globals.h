@@ -2,6 +2,7 @@
 #define PLAYER_DIRECTION_RIGHT 0x20
 #define PLAYER_DIRECTION_UP 4
 #define PLAYER_DIRECTION_DOWN 0
+#define PLAYER_SPRITE_EMPTY 0xee
 
 #define PLAYER_SPRITE_ID 0x10
 #define PLAYER_SPRITE_TILE 0
@@ -23,6 +24,7 @@
 #define GAME_STATE_RUNNING 0
 #define GAME_STATE_REDRAW 1
 #define GAME_STATE_WORLD_MOVEMENT 2
+#define GAME_STATE_GAME_OVER 250
 
 #define LEVEL_FRAGMENT_1 0x01
 #define LEVEL_FRAGMENT_2 0x02
@@ -52,8 +54,9 @@ extern unsigned int scratchInt;
 extern unsigned char playerOverworldPosition;
 extern unsigned char currentSpriteId;
 extern unsigned char gameState;
-extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity;
+extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime;
 extern unsigned char playerHealth, worldChunkCount;
+extern unsigned char FRAME_COUNTER;
 
 #pragma zpsym ("currentPadState")
 #pragma zpsym ("i")
@@ -75,6 +78,8 @@ extern unsigned char playerHealth, worldChunkCount;
 #pragma zpsym ("playerYVelocity")
 #pragma zpsym ("playerHealth")
 #pragma zpsym ("worldChunkCount")
+#pragma zpsym ("playerVelocityLockTime")
+#pragma zpsym ("FRAME_COUNTER")
 
 extern unsigned char currentLevel[256];
 extern char screenBuffer[0x30];

@@ -12,6 +12,7 @@ FT_SFX_STREAMS			= 4			;number of sound effects played at once, 1..4
 
 
     .export _exit,__STARTUP__:absolute=1
+	.export _FRAME_COUNTER
 	.import initlib,push0,popa,popax,_main,zerobss,copydata
 
 ; Linker generated symbols
@@ -53,6 +54,7 @@ PAL_BUF		=$01c0
 .segment "ZEROPAGE"
 
 NTSC_MODE: 			.res 1
+_FRAME_COUNTER: 
 FRAME_CNT1: 		.res 1
 FRAME_CNT2: 		.res 1
 VRAM_UPDATE: 		.res 1

@@ -30,7 +30,7 @@
 unsigned char currentPadState, staticPadState;
 unsigned char i;
 unsigned char j;
-unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity;
+unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime;
 unsigned char playerOverworldPosition;
 unsigned char currentSpriteId;
 unsigned char gameState;
@@ -138,6 +138,8 @@ void main(void) {
 			draw_sprites();
 			draw_hud();
 			gameState = GAME_STATE_RUNNING;
+		} else if (gameState == GAME_STATE_GAME_OVER) {
+			// CRASH. FIXME: Don't do that.
 		}
 	}
 }
@@ -211,7 +213,7 @@ void draw_hud() {
 	vram_put(HUD_BLANK);
 
 	for (i = 0; i < 5; i++) {
-		if (playerHealth >= i)
+		if (playerHealth > i)
 			vram_put(HUD_HEART);
 		else
 			vram_put(HUD_BLANK);
@@ -242,7 +244,7 @@ void update_hud() {
 	screenBuffer[1] = LSB(NTADR_A(9, 25));
 	screenBuffer[2] = 5u;
 	for (i = 0; i < 5; ++i) 
-		if (playerHealth >= i)
+		if (playerHealth > i)
 			screenBuffer[i+3u] = HUD_HEART;
 		else 
 			screenBuffer[i+3u] = HUD_BLANK;
