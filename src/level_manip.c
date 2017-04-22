@@ -21,8 +21,7 @@ void banked_draw_level() {
 	);
 		vram_put(scratch);
 		vram_put(scratch+1);
-		vram_adr(NAMETABLE_A + scratchInt
-	 + 32);
+		vram_adr(NAMETABLE_A + scratchInt + 32);
 		vram_put(scratch + 16);
 		vram_put(scratch + 17);
 		// FIXME: Palette bytes
