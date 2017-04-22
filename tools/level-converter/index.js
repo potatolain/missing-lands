@@ -90,6 +90,7 @@ var width = levelInfo.width,
 	roomsWide = width / SCREEN_WIDTH,
 	roomsTall = height / SCREEN_HEIGHT,
 	data = levelInfo.layers[0].data,
+	spriteData = levelInfo.layers[2].data,
 	originalSize = data.length,
 	rawColumns = [],
 	columnDefinitions = [],
@@ -105,6 +106,7 @@ var fileContent = ".export _"+name+"\n_"+name+":\n";
 
 for (var x = 0; x < roomsWide; x++) {
 	for (var y = 0; y < roomsTall; y++) {
+		var roomSpriteData = [];
 		fileContent += "\n\n";
 		if (x == 7 && y == 7) {
 			// HACK ATTACK
@@ -118,14 +120,27 @@ for (var x = 0; x < roomsWide; x++) {
 					if (xx != 0) {
 						fileContent += ", ";
 					}
-					fileContent += data[
-						(x * SCREEN_WIDTH) + (y * (roomsWide*SCREEN_WIDTH)*SCREEN_HEIGHT) + (yy * width) + xx
-					] - 1;
+					var pos = (x * SCREEN_WIDTH) + (y * (roomsWide*SCREEN_WIDTH)*SCREEN_HEIGHT) + (yy * width) + xx;
+					fileContent += data[pos] - 1;
+					if (spriteData[pos] != 0) {
+						roomSpriteData.push(yy*SCREEN_WIDTH+xx);
+						roomSpriteData.push(spriteData[pos]-257);
+					}
 					
 				}
 				fileContent += "\n";
 			}
-			for (var yy = SCREEN_HEIGHT; yy < SCREEN_HEIGHT_PADDED; yy++) {
+			while (roomSpriteData.length < 32)
+				roomSpriteData.push(255);
+			
+			fileContent += "; Sprites\n.byte ";
+			for (var i = 0; i < 15; i++)
+				fileContent += roomSpriteData[i] + ', ';
+			fileContent += roomSpriteData[15] + "\n.byte ";
+			for (var i = 16; i < 31; i++)
+				fileContent += roomSpriteData[i] + ', ';
+			fileContent += roomSpriteData[31] + "\n; End sprite data\n";
+			for (var yy = SCREEN_HEIGHT+2; yy < SCREEN_HEIGHT_PADDED; yy++) {
 				fileContent += ".byte 0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0\n";
 			}
 		}

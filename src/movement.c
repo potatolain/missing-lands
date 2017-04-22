@@ -76,21 +76,6 @@ void do_banked_movement() {
 
 	// Okay, collision test time. Hold onto yer butts!
 	// If you're trying to parse this, I'm seriously sorry. I probably couldn't even help you by the time you read this...
-	if (playerXVelocity != 0) {
-		scratch = playerX + playerXVelocity;
-		if (playerXVelocity & 0x80) {
-			// TL || BL
-			if (test_collision(currentLevel[(scratch>>4)+((((playerY)>>4))<<4)]) || test_collision(currentLevel[(scratch>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
-				playerXVelocity = 0;
-			}
-		} else {
-			// TR || BR
-			if (test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+(((playerY>>4))<<4)]) || test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
-				playerXVelocity = 0;
-			}
-		}
-	}
-
 	if (playerYVelocity != 0) {
 		scratch = playerY + playerYVelocity;
 		if (playerYVelocity & 0x80) {
@@ -98,19 +83,40 @@ void do_banked_movement() {
 			if (test_collision(currentLevel[(playerX>>4)+((((scratch)>>4))<<4)]) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+(((scratch>>4))<<4)])) {
 				playerYVelocity = 0;
 			}
+			playerDirection = PLAYER_DIRECTION_UP;
 		} else {
 			// BL || BR
 			if (test_collision(currentLevel[((playerX)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)]) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)])) {
 				playerYVelocity = 0;
 			}
+			playerDirection = PLAYER_DIRECTION_DOWN;
 		}
 	}
+
+	if (playerXVelocity != 0) {
+		scratch = playerX + playerXVelocity;
+		if (playerXVelocity & 0x80) {
+			// TL || BL
+			if (test_collision(currentLevel[(scratch>>4)+((((playerY)>>4))<<4)]) || test_collision(currentLevel[(scratch>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
+				playerXVelocity = 0;
+			}
+			playerDirection = PLAYER_DIRECTION_LEFT;
+		} else {
+			// TR || BR
+			if (test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+(((playerY>>4))<<4)]) || test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
+				playerXVelocity = 0;
+			}
+			playerDirection = PLAYER_DIRECTION_RIGHT;
+		}
+	}
+
+
 
 	playerX += playerXVelocity;
 	playerY += playerYVelocity;
 
 	currentSpriteId = PLAYER_SPRITE_ID;
-	scratch = PLAYER_SPRITE_TILE + ((playerAnimState & 0x04) >> 1);
+	scratch = PLAYER_SPRITE_TILE + ((playerAnimState & 0x04) >> 1) + playerDirection;
 	currentSpriteId = oam_spr(playerX, playerY, scratch, 0, PLAYER_SPRITE_ID);
 	currentSpriteId = oam_spr(playerX+8, playerY, scratch+1, 0, currentSpriteId);
 	currentSpriteId = oam_spr(playerX, playerY+8, scratch+0x10, 0, currentSpriteId);

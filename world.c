@@ -7,12 +7,14 @@
 #include "src/level_manip.h"
 #include "src/movement.h"
 #include "src/globals.h"
+#include "src/sprites.h"
 
 // Suggestion: Define smart names for your banks and use defines like this. 
 // This is just to make a clear example, and I didn't want to suggest using bank #s directly.
 #define BANK_TITLE 0
 #define BANK_LEVEL_MANIP 1
 #define BANK_MOVEMENT 1
+#define BANK_SPRITES 1
 #define BANK_LEVEL_1 2
 
 // Ditto, same advice here.
@@ -21,7 +23,6 @@
 
 #define DUMMY_SONG 0
 #define SFX_BOING 0 
-#define MAP_TILE_SIZE 192
 
 // Globals! Defined as externs in src/globals.h
 #pragma bssseg (push,"ZEROPAGE")
@@ -33,13 +34,14 @@ unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocit
 unsigned char playerOverworldPosition;
 unsigned char currentSpriteId;
 unsigned char gameState;
-unsigned char scratch, scratch2;
+unsigned char scratch, scratch2, scratch3, scratch4;
 unsigned int scratchInt;
 #pragma bssseg (pop)
 #pragma dataseg(pop)
 
 
-char currentMessage[16];
+// 4 bytes of data for each sprite available on the level.
+char extendedSpriteData[56];
 char screenBuffer[0x30];
 char currentLevel[256];
 char currentWorldData[64];
@@ -142,6 +144,8 @@ void draw_level() {
 	load_screen();
 	set_prg_bank(BANK_LEVEL_MANIP);
 	banked_draw_level();
+	set_prg_bank(BANK_SPRITES);
+	banked_draw_sprites();
 }
 
 unsigned char test_collision(unsigned char tileId) {

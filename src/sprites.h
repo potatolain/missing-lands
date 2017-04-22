@@ -1,0 +1,11 @@
+#define SPRITE_TYPE_WORLD_PIECE 0x10
+#define SPRITE_TYPE_MASK 0xf0
+#define SPRITE_PALETTE_MASK 0x03
+#define SPRITE_SIZE_NORMAL 0
+
+#define SPRITE_PALETTE_0 0
+#define SPRITE_PALETTE_1 1
+#define SPRITE_PALETTE_2 2
+#define SPRITE_PALETTE_3 3
+
+void banked_draw_sprites();

@@ -35,7 +35,7 @@ void banked_draw_level() {
 		vram_adr(NAMETABLE_A + scratchInt + 32);
 		vram_put(scratch + 16);
 		vram_put(scratch + 17);
-		// FIXME: Palette bytes
+
 		scratch = (currentLevel[i] & 0xc0); // Top 2 bits are the palette bytes.
 
 		if (i % 32 == 16) 

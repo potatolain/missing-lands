@@ -1,11 +1,12 @@
-#define PLAYER_DIRECTION_LEFT 0
-#define PLAYER_DIRECTION_RIGHT 1
-#define PLAYER_DIRECTION_UP 2
-#define PLAYER_DIRECTION_DOWN 3
+#define PLAYER_DIRECTION_LEFT 0x24
+#define PLAYER_DIRECTION_RIGHT 0x20
+#define PLAYER_DIRECTION_UP 4
+#define PLAYER_DIRECTION_DOWN 0
 
 #define PLAYER_SPRITE_ID 0x10
 #define PLAYER_SPRITE_TILE 0
 #define PLAYER_VELOCITY 1
+#define FIRST_ENEMY_SPRITE_ID 0x20
 
 #define PLAYER_WIDTH 15
 #define PLAYER_HEIGHT 15
@@ -17,6 +18,7 @@
 
 #define LEVEL_WIDTH 8
 #define LEVEL_HEIGHT 8
+#define MAP_TILE_SIZE 192
 
 #define GAME_STATE_RUNNING 0
 #define GAME_STATE_REDRAW 1
@@ -32,7 +34,7 @@
 // limited ram. 
 
 extern unsigned char currentPadState;
-extern unsigned char i, j, scratch, scratch2; 
+extern unsigned char i, j, scratch, scratch2, scratch3, scratch4; 
 extern unsigned int scratchInt;
 extern unsigned char playerOverworldPosition;
 extern unsigned char currentSpriteId;
@@ -47,6 +49,8 @@ extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerX
 #pragma zpsym ("currentSpriteId")
 #pragma zpsym ("scratch")
 #pragma zpsym ("scratch2")
+#pragma zpsym ("scratch3")
+#pragma zpsym ("scratch4")
 #pragma zpsym ("gameState")
 #pragma zpsym ("playerX")
 #pragma zpsym ("playerY")
@@ -58,6 +62,7 @@ extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerX
 extern unsigned char currentLevel[256];
 extern char screenBuffer[0x30];
 extern char currentWorldData[64];
+extern char extendedSpriteData[56];
 
 
 
