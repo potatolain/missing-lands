@@ -30,6 +30,18 @@
 #define LEVEL_FRAGMENT_2_TILES 32
 #define LEVEL_FRAGMENT_TILE_LEN 8
 
+#define HUD_CHARACTERS 0xc1
+#define HUD_NUMBERS 0xf6
+#define HUD_HEART 0xe0
+#define HUD_H 0xe1
+#define HUD_W 0xe2
+#define HUD_C 0xe3
+#define HUD_COLON 0xe4
+#define HUD_BLANK 0xf5
+#define HUD_TOP 0xe5
+#define HUD_L 0xe6
+#define HUD_R 0xe7
+
 
 // This file defines globals that can be used all over. You'll want common things in here, as the NES has very, very
 // limited ram. 
@@ -41,6 +53,7 @@ extern unsigned char playerOverworldPosition;
 extern unsigned char currentSpriteId;
 extern unsigned char gameState;
 extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity;
+extern unsigned char playerHealth, worldChunkCount;
 
 #pragma zpsym ("currentPadState")
 #pragma zpsym ("i")
@@ -60,6 +73,8 @@ extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerX
 #pragma zpsym ("playerAnimState")
 #pragma zpsym ("playerXVelocity")
 #pragma zpsym ("playerYVelocity")
+#pragma zpsym ("playerHealth")
+#pragma zpsym ("worldChunkCount")
 
 extern unsigned char currentLevel[256];
 extern char screenBuffer[0x30];
@@ -72,3 +87,4 @@ extern char extendedSpriteData[56];
 extern void put_str(unsigned int adr, const char *str);
 extern void clear_screen();
 extern unsigned char test_collision(unsigned char tileId);
+void update_hud();

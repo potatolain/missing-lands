@@ -35,6 +35,7 @@ unsigned char playerOverworldPosition;
 unsigned char currentSpriteId;
 unsigned char gameState;
 unsigned char scratch, scratch2, scratch3, scratch4, scratch5;
+unsigned char playerHealth, worldChunkCount;
 unsigned int scratchInt;
 #pragma bssseg (pop)
 #pragma dataseg(pop)
@@ -56,6 +57,7 @@ static unsigned char mirrorMode;
 void draw_level();
 void draw_sprites();
 void do_movement();
+void draw_hud();
 
 void clear_screen() {
 	// Clear the screen to start
@@ -104,9 +106,12 @@ void main(void) {
 	set_chr_bank_0(CHR_BANK_MAIN);
 	set_chr_bank_1(CHR_BANK_MAIN+1);
 
-	playerOverworldPosition = 27;
+	playerOverworldPosition = 26;
 	playerX = 80;
 	playerY = 80;
+
+	playerHealth = 5;
+	worldChunkCount = 0;
 
 	for (i = 0; i < 64; i++)
 		currentWorldData[i] = 0;
@@ -115,6 +120,7 @@ void main(void) {
 	// TODO: Fade anim goes here.
 	draw_level();
 	draw_sprites();
+	draw_hud();
 
 
 	// Now we wait for input from the user, and do dumb things!
@@ -130,6 +136,7 @@ void main(void) {
 		} else if (gameState == GAME_STATE_WORLD_MOVEMENT) {
 			draw_level();
 			draw_sprites();
+			draw_hud();
 			gameState = GAME_STATE_RUNNING;
 		}
 	}
@@ -179,4 +186,70 @@ unsigned char test_collision(unsigned char tileId) {
 		default:
 			return 0;
 	}
+}
+
+// TODO: Bank me!
+void draw_hud() {
+	ppu_off();
+	vram_adr(0x23f0);
+	for (i = 0; i < 16; i++)
+		vram_put(0xff);
+
+	vram_adr(NTADR_A(0, 24));
+	vram_put(HUD_L);
+	vram_fill(HUD_TOP, 30);
+	vram_put(HUD_R);
+
+	vram_adr(NTADR_A(1, 25));
+	vram_put(HUD_H);
+	vram_put(HUD_CHARACTERS+('e'-'a'));
+	vram_put(HUD_CHARACTERS+('a'-'a'));
+	vram_put(HUD_CHARACTERS+('l'-'a'));
+	vram_put(HUD_CHARACTERS+('t'-'a'));
+	vram_put(HUD_CHARACTERS+('h'-'a'));
+	vram_put(HUD_COLON);
+	vram_put(HUD_BLANK);
+
+	for (i = 0; i < 5; i++) {
+		if (playerHealth >= i)
+			vram_put(HUD_HEART);
+		else
+			vram_put(HUD_BLANK);
+	}
+	vram_adr(NTADR_A(1,27));
+	vram_put(HUD_W);
+	vram_put(HUD_CHARACTERS+('o'-'a'));
+	vram_put(HUD_CHARACTERS+('r'-'a'));
+	vram_put(HUD_CHARACTERS+('l'-'a'));
+	vram_put(HUD_CHARACTERS+('d'-'a'));
+	vram_put(HUD_BLANK);
+	vram_put(HUD_C);
+	vram_put(HUD_CHARACTERS+('h'-'a'));
+	vram_put(HUD_CHARACTERS+('u'-'a'));
+	vram_put(HUD_CHARACTERS+('n'-'a'));
+	vram_put(HUD_CHARACTERS+('k'-'a'));
+	vram_put(HUD_CHARACTERS+('s'-'a'));
+	vram_put(HUD_COLON);
+	vram_put(HUD_BLANK);
+	vram_put(HUD_NUMBERS);
+	vram_put(HUD_NUMBERS+worldChunkCount);
+
+	ppu_on_all();
+}
+
+void update_hud() {
+	screenBuffer[0] = MSB(NTADR_A(9, 25)) | NT_UPD_HORZ;
+	screenBuffer[1] = LSB(NTADR_A(9, 25));
+	screenBuffer[2] = 5u;
+	for (i = 0; i < 5; ++i) 
+		if (playerHealth >= i)
+			screenBuffer[i+3u] = HUD_HEART;
+		else 
+			screenBuffer[i+3u] = HUD_BLANK;
+	screenBuffer[8] = MSB(NTADR_A(16, 27));
+	screenBuffer[9] = LSB(NTADR_A(16, 27));
+	screenBuffer[10] = HUD_NUMBERS+worldChunkCount;
+	screenBuffer[11] = NT_UPD_EOF;
+	set_vram_update(screenBuffer);
+
 }

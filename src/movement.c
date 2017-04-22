@@ -140,14 +140,28 @@ void do_sprite_collision() {
 
 			switch (extendedSpriteData[(i<<2)]) {
 				case SPRITE_TYPE_WORLD_PIECE:
-					currentWorldData[playerOverworldPosition] |= extendedSpriteData[(i<<2)+3];
-
-					gameState = GAME_STATE_REDRAW;
+					scratch = playerOverworldPosition;
+					if (currentLevel[MAP_TILE_SIZE + 32 + i] != 0xf0) {
+						scratch = currentLevel[MAP_TILE_SIZE + 32 + i];
+					}
+					currentWorldData[scratch] |= extendedSpriteData[(i<<2)+3];
+					
 					// Now hide it.
 					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4))) = 0xff;
 					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+4)) = 0xff;
 					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+8)) = 0xff;
 					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+12)) = 0xff;
+
+					worldChunkCount++;
+					update_hud();
+					// Please try not to vomit. I need 2 screen updates, so I trigger one after the other, and wait for nmi so they don't step on eachother.
+					if (scratch == playerOverworldPosition) {
+						ppu_wait_nmi();
+						gameState = GAME_STATE_REDRAW;
+					}
+
+
+					
 					break;
 				default: 
 					// Eh, do nothing. It shall live on.

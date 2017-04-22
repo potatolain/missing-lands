@@ -139,8 +139,13 @@ for (var x = 0; x < roomsWide; x++) {
 			fileContent += roomSpriteData[15] + "\n.byte ";
 			for (var i = 16; i < 31; i++)
 				fileContent += roomSpriteData[i] + ', ';
-			fileContent += roomSpriteData[31] + "\n; End sprite data\n";
-			for (var yy = SCREEN_HEIGHT+2; yy < SCREEN_HEIGHT_PADDED; yy++) {
+			fileContent += roomSpriteData[31] + "\n; End sprite data\n\n;Overrides\n";
+			if (fs.existsSync("levels/position_overrides/"+name+"_"+x+"_"+y+".asm")) {
+				fileContent += ".include \"levels/position_overrides/" +  name + "_" + x + "_" + y +".asm"+ "\"\n\n";
+			} else {
+				fileContent += ".byte $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f0\n\n";
+			}
+			for (var yy = SCREEN_HEIGHT+3; yy < SCREEN_HEIGHT_PADDED; yy++) {
 				fileContent += ".byte 0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0,0, 0, 0, 0\n";
 			}
 		}

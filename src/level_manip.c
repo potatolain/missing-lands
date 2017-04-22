@@ -8,6 +8,8 @@ void banked_draw_level() {
 	vram_inc(0);
 	vram_adr(NAMETABLE_A);
 
+	// Make sure neslib doesn't try to draw this. Bad things will happen.
+	set_vram_update(NULL);
 	for (i = 0; i < sizeof(screenBuffer); i++)
 		screenBuffer[i] = 0;
 	j = -1; 
@@ -62,12 +64,9 @@ void banked_draw_level() {
 			}
 		}
 		screenBuffer[j] += scratch;
-		//scratchInt = NAMETABLE_A+0x3c0+(i>>);
 		vram_adr(NAMETABLE_A + scratchInt>>2);
 	}
 	vram_adr(NAMETABLE_A + 0x3c0);
 	vram_write(screenBuffer, 0x30);
-	//vram_fill(2, 0x3c0);
-	vram_fill(0, 0x30);
 	ppu_on_all();
 }
