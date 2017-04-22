@@ -90,3 +90,51 @@ void show_game_over() {
 }
 
 
+void banked_draw_hud() {
+	ppu_off();
+	vram_adr(0x23f0);
+	for (i = 0; i < 16; i++)
+		vram_put(0xff);
+
+	vram_adr(NTADR_A(0, 24));
+	vram_put(HUD_L);
+	vram_fill(HUD_TOP, 30);
+	vram_put(HUD_R);
+
+	vram_adr(NTADR_A(1, 25));
+	vram_put(HUD_H);
+	vram_put(HUD_CHARACTERS+('e'-'a'));
+	vram_put(HUD_CHARACTERS+('a'-'a'));
+	vram_put(HUD_CHARACTERS+('l'-'a'));
+	vram_put(HUD_CHARACTERS+('t'-'a'));
+	vram_put(HUD_CHARACTERS+('h'-'a'));
+	vram_put(HUD_COLON);
+	vram_put(HUD_BLANK);
+
+	for (i = 0; i < 5; i++) {
+		if (playerHealth > i)
+			vram_put(HUD_HEART);
+		else
+			vram_put(HUD_BLANK);
+	}
+	vram_adr(NTADR_A(1,27));
+	vram_put(HUD_W);
+	vram_put(HUD_CHARACTERS+('o'-'a'));
+	vram_put(HUD_CHARACTERS+('r'-'a'));
+	vram_put(HUD_CHARACTERS+('l'-'a'));
+	vram_put(HUD_CHARACTERS+('d'-'a'));
+	vram_put(HUD_BLANK);
+	vram_put(HUD_C);
+	vram_put(HUD_CHARACTERS+('h'-'a'));
+	vram_put(HUD_CHARACTERS+('u'-'a'));
+	vram_put(HUD_CHARACTERS+('n'-'a'));
+	vram_put(HUD_CHARACTERS+('k'-'a'));
+	vram_put(HUD_CHARACTERS+('s'-'a'));
+	vram_put(HUD_COLON);
+	vram_put(HUD_BLANK);
+	vram_put(HUD_NUMBERS);
+	vram_put(HUD_NUMBERS+worldChunkCount);
+
+	ppu_on_all();
+
+}
