@@ -2,6 +2,7 @@
 #include "lib/boilerplate.h"
 #include "bin/build_info.h"
 #include "src/title.h"
+#include "graphics/palettes.h"
 
 // Suggestion: Define smart names for your banks and use defines like this. 
 // This is just to make a clear example, and I didn't want to suggest using bank #s directly.
@@ -25,6 +26,13 @@ static unsigned char playMusic;
 static unsigned char chrBank;
 static unsigned char mirrorMode;
 static char screenBuffer[20];
+
+void clear_screen() {
+	// Clear the screen to start
+	vram_adr(0x2060);
+	vram_fill(0, 0x03a0);
+}
+
 
 // Put a string on the screen at X/Y coordinates given in adr.
 void put_str(unsigned int adr, const char *str) {
@@ -61,6 +69,9 @@ void main(void) {
 
 	set_prg_bank(BANK_TITLE);
 	show_title();
+
+	// TODO: Fade anim goes here.
+	
 
 	// Now we wait for input from the user, and do dumb things!
 	while(1) {

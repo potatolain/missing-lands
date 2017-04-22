@@ -1,0 +1,1 @@
+extern unsigned char main_palette[16];

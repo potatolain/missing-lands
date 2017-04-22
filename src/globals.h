@@ -6,3 +6,4 @@ extern char currentMessage[16];
 
 
 extern void put_str(unsigned int adr, const char *str);
+extern void clear_screen();

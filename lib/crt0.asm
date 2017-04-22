@@ -238,6 +238,7 @@ detectNTSC:
 
 	.include "lib/neslib.asm"
 	.include "lib/boilerplate.asm"
+	.include "graphics/palettes.asm"
 
 .segment "RODATA"
 
@@ -257,7 +258,7 @@ sounds_data:
 .segment "CHR_0"
 	.incbin "graphics/ascii.chr"
 .segment "CHR_1"
-	.incbin "graphics/ascii-inverted.chr"
+	.incbin "graphics/main.chr"
 
 ; MMC1 needs a reset stub in every bank that will put us into a known state. This defines it for all banks.
 .repeat $0f, I
