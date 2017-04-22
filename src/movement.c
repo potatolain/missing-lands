@@ -36,6 +36,7 @@ void do_banked_movement() {
 			playerX = SCREEN_EDGE_LEFT+5;
 			// TODO: Cool ppu scrolling anim
 			gameState = GAME_STATE_REDRAW;
+			return;
 		} else if (!(playerXVelocity & 0x80)) {
 			playerXVelocity = 0;
 		}
@@ -44,6 +45,7 @@ void do_banked_movement() {
 			playerOverworldPosition -= LEVEL_WIDTH;
 			playerX = SCREEN_EDGE_RIGHT-5;
 			gameState = GAME_STATE_REDRAW;
+			return;
 		} else if (playerXVelocity & 0x80) {
 			playerXVelocity = 0;
 		}
@@ -56,6 +58,7 @@ void do_banked_movement() {
 			playerY = SCREEN_EDGE_TOP+5;
 			// TODO: Cool ppu scrolling anim
 			gameState = GAME_STATE_REDRAW;
+			return;
 		} else if (!(playerYVelocity & 0x80)) {
 			playerYVelocity = 0;
 		}
@@ -64,10 +67,43 @@ void do_banked_movement() {
 			--playerOverworldPosition;
 			playerY = SCREEN_EDGE_BOTTOM-5;
 			gameState = GAME_STATE_REDRAW;
+			return;
 		} else if (playerYVelocity & 0x80) {
 			playerYVelocity = 0;
 		}
 
+	}
+
+	// Okay, collision test time. Hold onto yer butts!
+	// If you're trying to parse this, I'm seriously sorry. I probably couldn't even help you by the time you read this...
+	if (playerXVelocity != 0) {
+		scratch = playerX + playerXVelocity;
+		if (playerXVelocity & 0x80) {
+			// TL || BL
+			if (test_collision(currentLevel[(scratch>>4)+((((playerY)>>4))<<4)]) || test_collision(currentLevel[(scratch>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
+				playerXVelocity = 0;
+			}
+		} else {
+			// TR || BR
+			if (test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+(((playerY>>4))<<4)]) || test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
+				playerXVelocity = 0;
+			}
+		}
+	}
+
+	if (playerYVelocity != 0) {
+		scratch = playerY + playerYVelocity;
+		if (playerYVelocity & 0x80) {
+			// TL || TR
+			if (test_collision(currentLevel[(playerX>>4)+((((scratch)>>4))<<4)]) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+(((scratch>>4))<<4)])) {
+				playerYVelocity = 0;
+			}
+		} else {
+			// BL || BR
+			if (test_collision(currentLevel[((playerX)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)]) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)])) {
+				playerYVelocity = 0;
+			}
+		}
 	}
 
 	playerX += playerXVelocity;

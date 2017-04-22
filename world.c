@@ -132,3 +132,12 @@ void draw_level() {
 	set_prg_bank(BANK_LEVEL_MANIP);
 	banked_draw_level();
 }
+
+unsigned char test_collision(unsigned char tileId) {
+	switch (tileId & 0x3f) {
+		case 2:
+			return 1;
+		default:
+			return 0;
+	}
+}

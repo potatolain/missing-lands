@@ -7,6 +7,9 @@
 #define PLAYER_SPRITE_TILE 0
 #define PLAYER_VELOCITY 1
 
+#define PLAYER_WIDTH 15
+#define PLAYER_HEIGHT 15
+
 #define SCREEN_EDGE_LEFT 10
 #define SCREEN_EDGE_RIGHT 245
 #define SCREEN_EDGE_TOP 10
@@ -36,3 +39,4 @@ extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerX
 
 extern void put_str(unsigned int adr, const char *str);
 extern void clear_screen();
+extern unsigned char test_collision(unsigned char tileId);
