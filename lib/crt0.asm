@@ -239,6 +239,8 @@ detectNTSC:
 	.include "lib/neslib.asm"
 	.include "lib/boilerplate.asm"
 	.include "graphics/palettes.asm"
+	; FIXME
+	.include "levels/processed/lvl1_tiles.asm"
 
 .segment "RODATA"
 

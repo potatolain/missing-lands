@@ -7,7 +7,7 @@
 ### USER EDITABLE STUFF STARTS HERE
 
 ROM_NAME=world
-OBJECTS_TO_BUILD=$(ROM_NAME).c bin/build_info.h bin/crt0.o bin/$(ROM_NAME).o bin/title.o bin/rom_1.o
+OBJECTS_TO_BUILD=$(ROM_NAME).c levels/processed/lvl1_tiles.asm bin/build_info.h bin/crt0.o bin/$(ROM_NAME).o bin/title.o bin/rom_1.o
 
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 MAIN_COMPILER=./tools/cc65/bin/cc65
@@ -16,6 +16,7 @@ MAIN_LINKER=./tools/cc65/bin/ld65
 MAIN_EMULATOR=tools/fceux/fceux
 DEBUG_EMULATOR=tools/nintendulatordx/nintendulator
 SPACE_CHECKER=tools/nessc/nessc
+LEVEL_CONVERTER=node tools/level-converter
 CONFIG_FILE=$(ROOT_DIR)/cfg/game.cfg
 ifeq ($(OS),Windows_NT)
 	TEXT2DATA=tools/famitone2/tools/text2data
@@ -53,6 +54,9 @@ sound/music.s: sound/music.txt
 
 bin/%.o: bin/%.s
 	$(MAIN_ASM_COMPILER) $<
+
+levels/processed/%_tiles.asm: levels/%.json
+	$(LEVEL_CONVERTER) $<
 
 bin/build_info.h: .FORCE
 # Outputs a bunch of build stats info build_info.h. Use it in your project to show details about the build in-game!
@@ -103,4 +107,6 @@ clean:
 	-rm -f *.o
 	-rm -f bin/*.o
 	-rm -f bin/*.s
+	-rm -f levels/processed/*.asm
+	-rm -f levels/processed/*.h
 
