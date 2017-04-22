@@ -3,3 +3,6 @@
 extern unsigned char currentPadState;
 extern unsigned char i;
 extern char currentMessage[16];
+
+
+extern void put_str(unsigned int adr, const char *str);

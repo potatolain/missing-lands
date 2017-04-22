@@ -1,13 +1,11 @@
 #include "lib/neslib.h"
 #include "lib/boilerplate.h"
 #include "bin/build_info.h"
-#include "src/rom_0.h"
-#include "src/rom_1.h"
+#include "src/title.h"
 
 // Suggestion: Define smart names for your banks and use defines like this. 
 // This is just to make a clear example, and I didn't want to suggest using bank #s directly.
-#define ROM_0 0
-#define ROM_1 1
+#define BANK_TITLE 0
 
 // Ditto, same advice here.
 #define CHR_BANK_0 0
@@ -61,60 +59,12 @@ void main(void) {
 	pal_col(1,0x19);//set dark green color
 	pal_col(17,0x19);
 
-
-	// Show a message to the user.
-	put_str(NTADR_A(2,8), "Hello world!");
-	put_str(NTADR_A(2,12), "Press A to toggle");
-	put_str(NTADR_A(2,13),"the message below.");
-	put_str(NTADR_A(2,20), "Start to toggle music");
-	put_str(NTADR_A(2,21), "Select to invert colors");
-	put_str(NTADR_A(2,22), "B to switch mirroring");
-
-	// Also show some cool build info because we can.
-	put_str(NTADR_A(2,24), "Built: " BUILD_DATE);
-	put_str(NTADR_A(2,25), "Build #" BUILD_NUMBER_STR " (" GIT_COMMIT_ID_SHORT " - " GIT_BRANCH ")");
-	put_str(NTADR_A(2,26), "Commit counter: " COMMIT_COUNT_STR);
-	ppu_on_all();
-
+	set_prg_bank(BANK_TITLE);
+	show_title();
 
 	// Now we wait for input from the user, and do dumb things!
 	while(1) {
 		currentPadState = pad_trigger(0);
-		if (currentPadState & PAD_A) {
-			showMessageA = !showMessageA;
-			if (showMessageA) {
-				set_prg_bank(ROM_0);
-				set_message_from_rom_0();
-			} else {
-				set_prg_bank(ROM_1);
-				set_message_from_rom_1();
-			}
-			write_screen_buffer(2, 15, currentMessage);
-			sfx_play(SFX_BOING, 0);
-		}
-
-		if (currentPadState & PAD_START) {
-			playMusic = !playMusic;
-			music_pause(playMusic);
-		}
-
-		if (currentPadState & PAD_SELECT) {
-			if (chrBank == CHR_BANK_0)
-				chrBank = CHR_BANK_1;
-			else
-				chrBank = CHR_BANK_0;
-			set_chr_bank_0(chrBank);
-			set_chr_bank_1(chrBank+1);
-		}
-
-		if (currentPadState & PAD_B) {
-			if (mirrorMode == MIRROR_HORIZONTAL)
-				mirrorMode = MIRROR_VERTICAL;
-			else
-				mirrorMode = MIRROR_HORIZONTAL;
-
-			set_mirroring(mirrorMode);
-		}
 		ppu_wait_nmi();
 	}
 }
