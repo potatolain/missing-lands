@@ -17,9 +17,11 @@ void banked_draw_sprites() {
 		scratch2 = currentLevel[MAP_TILE_SIZE + (i<<1)+1];
 
 		extendedSpriteData[(i<<2)  ] = sprite_data[(scratch2<<2)];
-		extendedSpriteData[(i<<2)+1] = sprite_data[(scratch2<<2)+1] & SPRITE_TYPE_MASK;
+		extendedSpriteData[(i<<2)+1] = sprite_data[(scratch2<<2)+1] & SPRITE_SIZE_MASK;
 		extendedSpriteData[(i<<2)+2] = sprite_data[(scratch2<<2)+2];
 		extendedSpriteData[(i<<2)+3] = sprite_data[(scratch2<<2)+3];
+
+		// TODO: Logic to hide these if you've already collected it.
 
 		// Scratch 1 is the position. Need to do some hax to get it to 16x16 coords
 		scratch2 = (scratch >> 4) << 4; // Y
@@ -31,6 +33,7 @@ void banked_draw_sprites() {
 		oam_spr(scratch, scratch2, scratch3, scratch4, FIRST_ENEMY_SPRITE_ID + (i << 4));
 		oam_spr(scratch+8, scratch2, scratch3+1, scratch4, (FIRST_ENEMY_SPRITE_ID + 4) + (i << 4));
 		oam_spr(scratch, scratch2+8, scratch3+0x10, scratch4, (FIRST_ENEMY_SPRITE_ID + 8) + (i << 4));
-		oam_spr(scratch+8, scratch2+8, scratch3+0x11, scratch4, (FIRST_ENEMY_SPRITE_ID + 12) + (i << 4));
+		currentSpriteId = oam_spr(scratch+8, scratch2+8, scratch3+0x11, scratch4, (FIRST_ENEMY_SPRITE_ID + 12) + (i << 4));
 	}
+	oam_hide_rest(currentSpriteId);
 }

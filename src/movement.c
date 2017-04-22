@@ -1,5 +1,7 @@
 #include "src/globals.h"
 #include "lib/neslib.h"
+#include "src/movement.h"
+#include "src/sprites.h"
 #pragma rodataseg ("ROM_01")
 #pragma codeseg ("ROM_01")
 
@@ -35,7 +37,7 @@ void do_banked_movement() {
 			playerOverworldPosition += LEVEL_WIDTH;
 			playerX = SCREEN_EDGE_LEFT+5;
 			// TODO: Cool ppu scrolling anim
-			gameState = GAME_STATE_REDRAW;
+			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
 		} else if (!(playerXVelocity & 0x80)) {
 			playerXVelocity = 0;
@@ -44,7 +46,7 @@ void do_banked_movement() {
 		if (playerOverworldPosition >= LEVEL_WIDTH) {
 			playerOverworldPosition -= LEVEL_WIDTH;
 			playerX = SCREEN_EDGE_RIGHT-5;
-			gameState = GAME_STATE_REDRAW;
+			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
 		} else if (playerXVelocity & 0x80) {
 			playerXVelocity = 0;
@@ -57,7 +59,7 @@ void do_banked_movement() {
 			++playerOverworldPosition;
 			playerY = SCREEN_EDGE_TOP+5;
 			// TODO: Cool ppu scrolling anim
-			gameState = GAME_STATE_REDRAW;
+			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
 		} else if (!(playerYVelocity & 0x80)) {
 			playerYVelocity = 0;
@@ -66,7 +68,7 @@ void do_banked_movement() {
 		if (playerOverworldPosition > 0) {
 			--playerOverworldPosition;
 			playerY = SCREEN_EDGE_BOTTOM-5;
-			gameState = GAME_STATE_REDRAW;
+			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
 		} else if (playerYVelocity & 0x80) {
 			playerYVelocity = 0;
@@ -110,7 +112,7 @@ void do_banked_movement() {
 		}
 	}
 
-
+	do_sprite_collision();
 
 	playerX += playerXVelocity;
 	playerY += playerYVelocity;
@@ -121,4 +123,37 @@ void do_banked_movement() {
 	currentSpriteId = oam_spr(playerX+8, playerY, scratch+1, 0, currentSpriteId);
 	currentSpriteId = oam_spr(playerX, playerY+8, scratch+0x10, 0, currentSpriteId);
 	currentSpriteId = oam_spr(playerX+8, playerY+8, scratch+0x11, 0, currentSpriteId);
+}
+
+void do_sprite_collision() {
+	scratch = playerX + playerXVelocity;
+	scratch2 = playerY + playerYVelocity;
+	for (i = 0; i < 12; ++i) {
+		scratch3 = extendedSpriteData[(i<<2)+1] == SPRITE_SIZE_NORMAL ? 16 : 8; // TODO: this logic is probably simpler than needed
+		// Yes, I'm directly reading values from OAM without so much as a #define. Shut up.
+		scratch4 = *(char*)(0x200 + FIRST_ENEMY_SPRITE_ID+3 + (i<<4));
+		scratch5 = *(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4));
+
+		if (playerX < scratch4 + scratch3 && playerX + PLAYER_WIDTH > scratch4 && 
+			playerY < scratch5 + scratch3 && playerY + PLAYER_WIDTH > scratch5) {
+			// When we collide... 
+
+			switch (extendedSpriteData[(i<<2)]) {
+				case SPRITE_TYPE_WORLD_PIECE:
+					currentWorldData[playerOverworldPosition] |= extendedSpriteData[(i<<2)+3];
+
+					gameState = GAME_STATE_REDRAW;
+					// Now hide it.
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4))) = 0xff;
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+4)) = 0xff;
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+8)) = 0xff;
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+12)) = 0xff;
+					break;
+				default: 
+					// Eh, do nothing. It shall live on.
+					break;
+			}
+		}
+
+	}
 }

@@ -34,7 +34,7 @@ unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocit
 unsigned char playerOverworldPosition;
 unsigned char currentSpriteId;
 unsigned char gameState;
-unsigned char scratch, scratch2, scratch3, scratch4;
+unsigned char scratch, scratch2, scratch3, scratch4, scratch5;
 unsigned int scratchInt;
 #pragma bssseg (pop)
 #pragma dataseg(pop)
@@ -54,6 +54,7 @@ static unsigned char mirrorMode;
 
 // Foward definitions. No they're not in a header. Go away this is a game jam. Clear enough for 2 days of development.
 void draw_level();
+void draw_sprites();
 void do_movement();
 
 void clear_screen() {
@@ -113,6 +114,8 @@ void main(void) {
 	playerDirection = PLAYER_DIRECTION_DOWN;
 	// TODO: Fade anim goes here.
 	draw_level();
+	draw_sprites();
+
 
 	// Now we wait for input from the user, and do dumb things!
 	while(1) {
@@ -123,6 +126,10 @@ void main(void) {
 			ppu_wait_nmi();
 		} else if (gameState == GAME_STATE_REDRAW) {
 			draw_level();
+			gameState = GAME_STATE_RUNNING;
+		} else if (gameState == GAME_STATE_WORLD_MOVEMENT) {
+			draw_level();
+			draw_sprites();
 			gameState = GAME_STATE_RUNNING;
 		}
 	}
@@ -144,6 +151,9 @@ void draw_level() {
 	load_screen();
 	set_prg_bank(BANK_LEVEL_MANIP);
 	banked_draw_level();
+}
+
+void draw_sprites() {
 	set_prg_bank(BANK_SPRITES);
 	banked_draw_sprites();
 }

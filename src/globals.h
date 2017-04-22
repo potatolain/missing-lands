@@ -22,6 +22,7 @@
 
 #define GAME_STATE_RUNNING 0
 #define GAME_STATE_REDRAW 1
+#define GAME_STATE_WORLD_MOVEMENT 2
 
 #define LEVEL_FRAGMENT_1 0x01
 #define LEVEL_FRAGMENT_2 0x02
@@ -34,7 +35,7 @@
 // limited ram. 
 
 extern unsigned char currentPadState;
-extern unsigned char i, j, scratch, scratch2, scratch3, scratch4; 
+extern unsigned char i, j, scratch, scratch2, scratch3, scratch4, scratch5; 
 extern unsigned int scratchInt;
 extern unsigned char playerOverworldPosition;
 extern unsigned char currentSpriteId;
@@ -51,6 +52,7 @@ extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerX
 #pragma zpsym ("scratch2")
 #pragma zpsym ("scratch3")
 #pragma zpsym ("scratch4")
+#pragma zpsym ("scratch5")
 #pragma zpsym ("gameState")
 #pragma zpsym ("playerX")
 #pragma zpsym ("playerY")
