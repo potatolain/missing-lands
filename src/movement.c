@@ -144,7 +144,7 @@ void do_sprite_collision() {
 	scratch = playerX + playerXVelocity;
 	scratch2 = playerY + playerYVelocity;
 	for (i = 0; i < 12; ++i) {
-		scratch3 = extendedSpriteData[(i<<2)+1] == SPRITE_SIZE_NORMAL ? 16 : 8; // TODO: this logic is probably simpler than needed
+		scratch3 = (extendedSpriteData[(i<<2)+1] & SPRITE_SIZE_MASK) == SPRITE_SIZE_NORMAL ? 16 : 8; // TODO: this logic is probably simpler than needed
 		// Yes, I'm directly reading values from OAM without so much as a #define. Shut up.
 		scratch4 = *(char*)(0x200 + FIRST_ENEMY_SPRITE_ID+3 + (i<<4));
 		scratch5 = *(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4));

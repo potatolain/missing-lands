@@ -55,6 +55,7 @@ void draw_level();
 void draw_sprites();
 void do_movement();
 void draw_hud();
+void update_sprites();
 
 void clear_screen() {
 	// Clear the screen to start
@@ -99,6 +100,7 @@ void main(void) {
 
 			set_prg_bank(BANK_TITLE);
 			show_title();
+			set_rand(FRAME_COUNTER);
 			// FIXME: Once there's some ingame music, swap this back on with a new song in GAME_STATE_START_LEVEL
 			// Then also on/off in pause.
 			music_pause(1);
@@ -143,6 +145,7 @@ void main(void) {
 			staticPadState = pad_trigger(0);
 			currentPadState = pad_poll(0);
 			do_movement();
+			update_sprites();
 			ppu_wait_nmi();
 		} else if (gameState == GAME_STATE_PAUSE) {
 
@@ -244,6 +247,11 @@ unsigned char test_collision(unsigned char tileId, unsigned char isPlayer) {
 void draw_hud() {
 	set_prg_bank(BANK_TITLE);
 	banked_draw_hud();
+}
+
+void update_sprites() {
+	set_prg_bank(BANK_SPRITES);
+	banked_update_sprites();
 }
 
 // TODO: Should I bank this? Not sure how much it helps..
