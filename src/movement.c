@@ -44,8 +44,10 @@ void do_banked_movement() {
 			playerYVelocity <<= 1;
 		}
 	} else {
-		playerVelocityLockTime--;
+		--playerVelocityLockTime;
 	}
+	if (playerInvulnTime)
+		--playerInvulnTime;
 
 	if (playerX > SCREEN_EDGE_RIGHT) {
 		//if (playerOverworldPosition < LEVEL_WIDTH*LEVEL_HEIGHT) {
@@ -138,7 +140,7 @@ void do_banked_movement() {
 
 	currentSpriteId = PLAYER_SPRITE_ID;
 	scratch = PLAYER_SPRITE_TILE + ((playerAnimState & 0x04) >> 1) + playerDirection;
-	if (playerVelocityLockTime && FRAME_COUNTER & 0x02)
+	if (playerInvulnTime && FRAME_COUNTER & 0x02)
 		scratch = PLAYER_SPRITE_EMPTY;
 	currentSpriteId = oam_spr(playerX, playerY, scratch, 0, PLAYER_SPRITE_ID);
 	currentSpriteId = oam_spr(playerX+8, playerY, scratch+1, 0, currentSpriteId);
@@ -167,7 +169,7 @@ void do_sprite_collision() {
 
 			switch (extendedSpriteData[(i<<2)]) {
 				case SPRITE_TYPE_ENEMY: 
-					if (playerVelocityLockTime > 0)
+					if (playerInvulnTime > 0)
 						break; // If you're already hurting, we'll be nice.
 					// Else... not so much
 					playerHealth--;
@@ -176,6 +178,7 @@ void do_sprite_collision() {
 					sfx_play(SFX_HURT, 0);
 					update_hud();
 					playerVelocityLockTime = ENEMY_VELOCITY_LOCK_TIME;
+					playerInvulnTime = (ENEMY_VELOCITY_LOCK_TIME*2);
 					if (playerXVelocity != 0)
 						playerXVelocity = ((0 - playerXVelocity) >> 1) || 1;
 					if (playerYVelocity != 0)

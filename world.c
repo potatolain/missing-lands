@@ -28,7 +28,7 @@
 unsigned char currentPadState, staticPadState;
 unsigned char i;
 unsigned char j;
-unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime;
+unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime, playerInvulnTime;
 unsigned char playerOverworldPosition, currentLevelId;
 unsigned char currentSpriteId;
 unsigned char gameState;
@@ -133,6 +133,7 @@ void main(void) {
 			playerXVelocity = 0;
 			playerYVelocity = 0;
 			playerVelocityLockTime = 0;
+			playerInvulnTime = 30; // You get a buffer, just in case.
 
 
 			for (i = 0; i < 64; i++)

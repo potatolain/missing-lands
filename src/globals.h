@@ -1,4 +1,4 @@
-#define DEBUG 0
+#define DEBUG 1
 #define NUMBER_OF_LEVELS 6
 #define PLAYER_DIRECTION_LEFT 0x24
 #define PLAYER_DIRECTION_RIGHT 0x20
@@ -76,7 +76,7 @@ extern unsigned int scratchInt;
 extern unsigned char playerOverworldPosition, currentLevelId;
 extern unsigned char currentSpriteId;
 extern unsigned char gameState;
-extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime;
+extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime, playerInvulnTime;
 extern unsigned char playerHealth, worldChunkCount, worldTotalChunks;
 extern unsigned char FRAME_COUNTER;
 
@@ -102,6 +102,7 @@ extern unsigned char FRAME_COUNTER;
 #pragma zpsym ("playerHealth")
 #pragma zpsym ("worldChunkCount")
 #pragma zpsym ("playerVelocityLockTime")
+#pragma zpsym ("playerInvulnTime")
 #pragma zpsym ("FRAME_COUNTER")
 #pragma zpsym ("worldTotalChunks")
 #pragma zpsym ("currentLevelId")
