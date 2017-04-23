@@ -105,6 +105,7 @@ void main(void) {
 			music_pause(1);
 
 			currentLevelId = 0;
+			playerHealth = 5;
 			gameState = GAME_STATE_START_LEVEL;
 		} else if (gameState == GAME_STATE_START_LEVEL) {
 
@@ -122,7 +123,6 @@ void main(void) {
 			worldTotalChunks = *(char*)(lvl_details+3);
 
 
-			playerHealth = 5;
 			worldChunkCount = 0;
 			playerDirection = PLAYER_DIRECTION_DOWN;
 			playerAnimState = 0;

@@ -2,6 +2,7 @@
 #include "lib/neslib.h"
 #include "lib/boilerplate.h"
 #include "bin/build_info.h"
+#include "src/sprites.h"
 #pragma rodataseg ("ROM_00")
 #pragma codeseg ("ROM_00")
 
@@ -45,8 +46,9 @@ void show_title() {
 	put_str(NTADR_A(2, 17), "your world was vast.");
 	put_str(NTADR_A(2, 20), "The pieces of that world");
 	put_str(NTADR_A(2, 21), "are scattered around you.");
-	put_str(NTADR_A(2, 22), "Can you restore this world");
-	put_str(NTADR_A(2, 23), "to its former glory?");
+	put_str(NTADR_A(2, 25), "Can you restore this world");
+	put_str(NTADR_A(2, 26), "to its former glory?");
+
 	ppu_on_all();
 
 	while (1) {
@@ -128,7 +130,7 @@ void show_win_screen() {
 	clear_screen();
 
 	set_chr_bank_0(CHR_BANK_TITLE);
-	set_chr_bank_1(CHR_BANK_TITLE+1);
+	set_chr_bank_1(CHR_BANK_MAIN+1);
 	pal_col(1,0x19);//set dark green color
 	pal_col(17,0x19);
 
@@ -141,8 +143,7 @@ void show_win_screen() {
 	put_str(NTADR_A(2,16), "of your tiny world have come");
 	put_str(NTADR_A(2,17), "back together.");
 	put_str(NTADR_A(2,20), "Your journey is now over.");
-	put_str(NTADR_A(5,26), "Thanks for playing!");
-
+	put_str(NTADR_A(6,26), "Thanks for playing!");
 
 	ppu_on_all();
 
@@ -152,8 +153,42 @@ void show_win_screen() {
 		if (currentPadState & PAD_START) {
 			break;
 		}
+		scratch = 38;
+		scratch2 = 27;
+		scratch3 = 0x20 + ((FRAME_COUNTER & 0x10) >> 3);
+		currentSpriteId = oam_spr(scratch, scratch2, scratch3, 0, PLAYER_SPRITE_ID);
+		currentSpriteId = oam_spr(scratch+8, scratch2, scratch3+1, 0, currentSpriteId);
+		currentSpriteId = oam_spr(scratch, scratch2+8, scratch3+0x10, 0, currentSpriteId);
+		currentSpriteId = oam_spr(scratch+8, scratch2+8, scratch3+0x11, 0, currentSpriteId);
+
+		scratch = 256-38 - 16;
+		scratch3 += 4;
+		currentSpriteId = oam_spr(scratch, scratch2, scratch3, 0, currentSpriteId);
+		currentSpriteId = oam_spr(scratch+8, scratch2, scratch3+1, 0, currentSpriteId);
+		currentSpriteId = oam_spr(scratch, scratch2+8, scratch3+0x10, 0, currentSpriteId);
+		currentSpriteId = oam_spr(scratch+8, scratch2+8, scratch3+0x11, 0, currentSpriteId);
+
+
+
+		scratch = 28;
+		scratch2 = 202;
+		scratch3 = 0x60 + ((FRAME_COUNTER & 0x10) >> 3);
+		currentSpriteId = oam_spr(scratch, scratch2, scratch3, SPRITE_PALETTE_2, currentSpriteId);
+		currentSpriteId = oam_spr(scratch+8, scratch2, scratch3+1, SPRITE_PALETTE_2, currentSpriteId);
+		currentSpriteId = oam_spr(scratch, scratch2+8, scratch3+0x10, SPRITE_PALETTE_2, currentSpriteId);
+		currentSpriteId = oam_spr(scratch+8, scratch2+8, scratch3+0x11, SPRITE_PALETTE_2, currentSpriteId);
+
+		scratch = 256-38 - 16;
+		scratch3 += 4;
+		currentSpriteId = oam_spr(scratch, scratch2, scratch3, SPRITE_PALETTE_2, currentSpriteId);
+		currentSpriteId = oam_spr(scratch+8, scratch2, scratch3+1, SPRITE_PALETTE_2, currentSpriteId);
+		currentSpriteId = oam_spr(scratch, scratch2+8, scratch3+0x10, SPRITE_PALETTE_2, currentSpriteId);
+		currentSpriteId = oam_spr(scratch+8, scratch2+8, scratch3+0x11, SPRITE_PALETTE_2, currentSpriteId);
+
+
 		ppu_wait_nmi();
-	}		
+	}
+	oam_hide_rest(0);
 	
 }
 
@@ -184,6 +219,7 @@ void banked_draw_hud() {
 		else
 			vram_put(HUD_BLANK);
 	}
+	vram_fill(HUD_BLANK, 64);
 	vram_adr(NTADR_A(1,27));
 	vram_put(HUD_W);
 	vram_put(HUD_CHARACTERS+('o'-'a'));
