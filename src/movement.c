@@ -6,6 +6,12 @@
 #pragma codeseg ("ROM_01")
 
 void do_banked_movement() {
+	#if DEBUG
+		if (staticPadState & PAD_START && currentPadState & PAD_SELECT) {
+			gameState = GAME_STATE_LEVEL_COMPLETE;
+			return;
+		}
+	#endif
 	if (staticPadState & PAD_START) {
 		gameState = GAME_STATE_PAUSE;
 		sfx_play(SFX_PAUSE, 2);
@@ -42,46 +48,46 @@ void do_banked_movement() {
 	}
 
 	if (playerX > SCREEN_EDGE_RIGHT) {
-		if (playerOverworldPosition < LEVEL_WIDTH*LEVEL_HEIGHT) {
+		//if (playerOverworldPosition < LEVEL_WIDTH*LEVEL_HEIGHT) {
 			playerOverworldPosition += LEVEL_WIDTH;
 			playerX = SCREEN_EDGE_LEFT+5;
 			// TODO: Cool ppu scrolling anim
 			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
-		} else if (!(playerXVelocity & 0x80)) {
+		/*} else if (!(playerXVelocity & 0x80)) {
 			playerXVelocity = 0;
-		}
+		}*/
 	} else if (playerX < SCREEN_EDGE_LEFT) {
-		if (playerOverworldPosition >= LEVEL_WIDTH) {
+		//if (playerOverworldPosition >= LEVEL_WIDTH) {
 			playerOverworldPosition -= LEVEL_WIDTH;
 			playerX = SCREEN_EDGE_RIGHT-5;
 			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
-		} else if (playerXVelocity & 0x80) {
+		/*} else if (playerXVelocity & 0x80) {
 			playerXVelocity = 0;
-		}
+		}*/
 
 	}
 
 	if (playerY > SCREEN_EDGE_BOTTOM) {
-		if (playerOverworldPosition < LEVEL_WIDTH*LEVEL_HEIGHT) {
+		//if (playerOverworldPosition < LEVEL_WIDTH*LEVEL_HEIGHT) {
 			++playerOverworldPosition;
 			playerY = SCREEN_EDGE_TOP+5;
 			// TODO: Cool ppu scrolling anim
 			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
-		} else if (!(playerYVelocity & 0x80)) {
+		/*} else if (!(playerYVelocity & 0x80)) {
 			playerYVelocity = 0;
-		}
+		}*/
 	} else if (playerY < SCREEN_EDGE_TOP) {
-		if (playerOverworldPosition > 0) {
+		//if (playerOverworldPosition > 0) {
 			--playerOverworldPosition;
 			playerY = SCREEN_EDGE_BOTTOM-5;
 			gameState = GAME_STATE_WORLD_MOVEMENT;
 			return;
-		} else if (playerYVelocity & 0x80) {
+		/*} else if (playerYVelocity & 0x80) {
 			playerYVelocity = 0;
-		}
+		}*/
 
 	}
 

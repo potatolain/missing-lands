@@ -101,7 +101,7 @@ void main(void) {
 
 			set_prg_bank(BANK_TITLE);
 			show_title();
-			set_rand(FRAME_COUNTER);
+		set_rand(FRAME_COUNTER);
 			// FIXME: Once there's some ingame music, swap this back on with a new song in GAME_STATE_START_LEVEL
 			// Then also on/off in pause.
 			music_pause(1);

@@ -6,5 +6,8 @@
 	.byte 27, 80, 80, 3
 	.include "levels/processed/lvl1_tiles.asm"
 .segment "ROM_03"
-	.byte 26, 80, 80, 2
+	.byte 27, 80, 80, 2
 	.include "levels/processed/lvl2_tiles.asm"
+.segment "ROM_04"
+	.byte 27, 80, 80, 4
+	.include "levels/processed/lvl3_tiles.asm"

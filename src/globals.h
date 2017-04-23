@@ -1,3 +1,5 @@
+#define DEBUG 0
+#define NUMBER_OF_LEVELS 2
 #define PLAYER_DIRECTION_LEFT 0x24
 #define PLAYER_DIRECTION_RIGHT 0x20
 #define PLAYER_DIRECTION_UP 4
@@ -13,7 +15,7 @@
 #define PLAYER_HEIGHT 15
 
 #define SCREEN_EDGE_LEFT 10
-#define SCREEN_EDGE_RIGHT 245
+#define SCREEN_EDGE_RIGHT 239
 #define SCREEN_EDGE_TOP 10
 #define SCREEN_EDGE_BOTTOM 172
 
@@ -55,8 +57,6 @@
 
 #define CHR_BANK_TITLE 0
 #define CHR_BANK_MAIN 2 // NOTE: We have two copies of the same 4k data in the 8k .chr files (because I'm lazy, ok?) so we use bank 2 to get the inverted one.
-
-#define NUMBER_OF_LEVELS 2
 
 #define SFX_HURT 1
 #define SFX_PAUSE 2
