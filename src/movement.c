@@ -86,14 +86,14 @@ void do_banked_movement() {
 		scratch = playerY + playerYVelocity;
 		if (playerYVelocity & 0x80) {
 			// TL || TR
-			if (test_collision(currentLevel[(playerX>>4)+((((scratch)>>4))<<4)]) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+(((scratch>>4))<<4)])) {
+			if (test_collision(currentLevel[(playerX>>4)+((((scratch)>>4))<<4)], 1) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+(((scratch>>4))<<4)], 1)) {
 				playerYVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
 				playerDirection = PLAYER_DIRECTION_UP;
 		} else {
 			// BL || BR
-			if (test_collision(currentLevel[((playerX)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)]) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)])) {
+			if (test_collision(currentLevel[((playerX)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)], 1) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)], 1)) {
 				playerYVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
@@ -105,14 +105,14 @@ void do_banked_movement() {
 		scratch = playerX + playerXVelocity;
 		if (playerXVelocity & 0x80) {
 			// TL || BL
-			if (test_collision(currentLevel[(scratch>>4)+((((playerY)>>4))<<4)]) || test_collision(currentLevel[(scratch>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
+			if (test_collision(currentLevel[(scratch>>4)+((((playerY)>>4))<<4)], 1) || test_collision(currentLevel[(scratch>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)], 1)) {
 				playerXVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
 				playerDirection = PLAYER_DIRECTION_LEFT;
 		} else {
 			// TR || BR
-			if (test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+(((playerY>>4))<<4)]) || test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)])) {
+			if (test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+(((playerY>>4))<<4)], 1) || test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)], 1)) {
 				playerXVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
@@ -187,7 +187,7 @@ void do_sprite_collision() {
 					worldChunkCount++;
 					update_hud();
 					// Please try not to vomit. I need 2 screen updates, so I trigger one after the other, and wait for nmi so they don't step on eachother.
-					if (scratch == playerOverworldPosition) {
+					if (scratch == playerOverworldPosition || worldChunkCount == worldTotalChunks) {
 						ppu_wait_nmi();
 						gameState = GAME_STATE_REDRAW;
 					}

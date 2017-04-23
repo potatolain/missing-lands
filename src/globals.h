@@ -24,6 +24,8 @@
 #define GAME_STATE_RUNNING 0
 #define GAME_STATE_REDRAW 1
 #define GAME_STATE_WORLD_MOVEMENT 2
+#define GAME_STATE_LEVEL_COMPLETE 3
+#define GAME_STATE_START_LEVEL 4
 #define GAME_STATE_INIT 255
 #define GAME_STATE_GAME_OVER 250
 
@@ -44,11 +46,15 @@
 #define HUD_TOP 0xe5
 #define HUD_L 0xe6
 #define HUD_R 0xe7
+#define HUD_SLASH 0xdb
+
+#define TILE_EXIT 15
+#define TILE_EXIT_CLOSED 14
 
 #define CHR_BANK_TITLE 0
 #define CHR_BANK_MAIN 2 // NOTE: We have two copies of the same 4k data in the 8k .chr files (because I'm lazy, ok?) so we use bank 2 to get the inverted one.
 
-
+#define NUMBER_OF_LEVELS 2
 
 // This file defines globals that can be used all over. You'll want common things in here, as the NES has very, very
 // limited ram. 
@@ -56,11 +62,11 @@
 extern unsigned char currentPadState;
 extern unsigned char i, j, scratch, scratch2, scratch3, scratch4, scratch5; 
 extern unsigned int scratchInt;
-extern unsigned char playerOverworldPosition;
+extern unsigned char playerOverworldPosition, currentLevelId;
 extern unsigned char currentSpriteId;
 extern unsigned char gameState;
 extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime;
-extern unsigned char playerHealth, worldChunkCount;
+extern unsigned char playerHealth, worldChunkCount, worldTotalChunks;
 extern unsigned char FRAME_COUNTER;
 
 #pragma zpsym ("currentPadState")
@@ -85,6 +91,8 @@ extern unsigned char FRAME_COUNTER;
 #pragma zpsym ("worldChunkCount")
 #pragma zpsym ("playerVelocityLockTime")
 #pragma zpsym ("FRAME_COUNTER")
+#pragma zpsym ("worldTotalChunks")
+#pragma zpsym ("currentLevelId")
 
 extern unsigned char currentLevel[256];
 extern char screenBuffer[0x30];
@@ -96,5 +104,5 @@ extern char extendedSpriteData[56];
 
 extern void put_str(unsigned int adr, const char *str);
 extern void clear_screen();
-extern unsigned char test_collision(unsigned char tileId);
+extern unsigned char test_collision(unsigned char tileId, unsigned char isPlayer);
 void update_hud();

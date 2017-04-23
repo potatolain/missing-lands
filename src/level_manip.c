@@ -27,6 +27,8 @@ void banked_draw_level() {
 		} else if (scratch >= LEVEL_FRAGMENT_2_TILES && scratch < LEVEL_FRAGMENT_2_TILES+LEVEL_FRAGMENT_TILE_LEN) {
 			if (currentWorldData[playerOverworldPosition] & LEVEL_FRAGMENT_2)
 				scratch -= (LEVEL_FRAGMENT_TILE_LEN*2);
+		} else if (scratch == TILE_EXIT && worldChunkCount < worldTotalChunks) {
+			scratch = TILE_EXIT_CLOSED;
 		}
 		scratch = (((scratch >> 3)) << 5) + ((scratch % 8) << 1);
 

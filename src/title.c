@@ -89,6 +89,35 @@ void show_game_over() {
 	
 }
 
+void show_level_complete() {
+	oam_hide_rest(0);
+	ppu_off();
+	clear_screen();
+
+	set_chr_bank_0(CHR_BANK_TITLE);
+	set_chr_bank_1(CHR_BANK_TITLE+1);
+	pal_col(1,0x19);//set dark green color
+	pal_col(17,0x19);
+
+
+	// Show a message to the user.
+	put_str(NTADR_A(8,8), "Level Complete!");
+	put_str(NTADR_A(8,17), "- Press Start -");
+
+
+	ppu_on_all();
+
+	// Wait for start
+	while (1) {
+		currentPadState = pad_trigger(0);
+		if (currentPadState & PAD_START) {
+			break;
+		}
+		ppu_wait_nmi();
+	}		
+	
+}
+
 
 void banked_draw_hud() {
 	ppu_off();
@@ -134,6 +163,9 @@ void banked_draw_hud() {
 	vram_put(HUD_BLANK);
 	vram_put(HUD_NUMBERS);
 	vram_put(HUD_NUMBERS+worldChunkCount);
+	vram_put(HUD_SLASH);
+	vram_put(HUD_NUMBERS);
+	vram_put(HUD_NUMBERS+worldTotalChunks);
 
 	ppu_on_all();
 

@@ -27,11 +27,11 @@ unsigned char currentPadState, staticPadState;
 unsigned char i;
 unsigned char j;
 unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime;
-unsigned char playerOverworldPosition;
+unsigned char playerOverworldPosition, currentLevelId;
 unsigned char currentSpriteId;
 unsigned char gameState;
 unsigned char scratch, scratch2, scratch3, scratch4, scratch5;
-unsigned char playerHealth, worldChunkCount;
+unsigned char playerHealth, worldChunkCount, worldTotalChunks;
 unsigned int scratchInt;
 #pragma bssseg (pop)
 #pragma dataseg(pop)
@@ -57,8 +57,8 @@ void draw_hud();
 
 void clear_screen() {
 	// Clear the screen to start
-	vram_adr(0x2060);
-	vram_fill(0, 0x03a0);
+	vram_adr(0x2000);
+	vram_fill(0, 0x0400);
 }
 
 
@@ -99,6 +99,11 @@ void main(void) {
 
 			set_prg_bank(BANK_TITLE);
 			show_title();
+
+			currentLevelId = 0;
+			gameState = GAME_STATE_START_LEVEL;
+		} else if (gameState == GAME_STATE_START_LEVEL) {
+
 			bank_spr(1);
 			pal_bg(main_palette);
 			pal_spr(sprite_palette);
@@ -107,6 +112,7 @@ void main(void) {
 
 			// TODO: Should be defined by the level...
 			playerOverworldPosition = 27;
+			worldTotalChunks = 1;
 			playerX = 80;
 			playerY = 80;
 
@@ -146,6 +152,11 @@ void main(void) {
 			set_prg_bank(BANK_TITLE);
 			show_game_over();
 			gameState = GAME_STATE_INIT;
+		} else if (gameState == GAME_STATE_LEVEL_COMPLETE) {
+			currentLevelId++;
+			set_prg_bank(BANK_TITLE);
+			show_level_complete();
+			gameState = GAME_STATE_START_LEVEL;
 		}
 	}
 }
@@ -173,7 +184,7 @@ void draw_sprites() {
 	banked_draw_sprites();
 }
 
-unsigned char test_collision(unsigned char tileId) {
+unsigned char test_collision(unsigned char tileId, unsigned char isPlayer) {
 	char temp = tileId & 0x3f;
 	if (temp >= LEVEL_FRAGMENT_1_TILES && temp < LEVEL_FRAGMENT_1_TILES+LEVEL_FRAGMENT_TILE_LEN) {
 		if (currentWorldData[playerOverworldPosition] & LEVEL_FRAGMENT_1)
@@ -184,7 +195,14 @@ unsigned char test_collision(unsigned char tileId) {
 	}
 
 	switch (temp) {
+		case 15: 
+			if (worldChunkCount >= worldTotalChunks) {
+				gameState = GAME_STATE_LEVEL_COMPLETE;
+			}
+			// else fallthru
 		case 2:
+		case 7:
+		case 14: 
 		case 21:
 		case 24: 
 		case 32:
