@@ -101,9 +101,7 @@ void main(void) {
 
 			set_prg_bank(BANK_TITLE);
 			show_title();
-		set_rand(FRAME_COUNTER);
-			// FIXME: Once there's some ingame music, swap this back on with a new song in GAME_STATE_START_LEVEL
-			// Then also on/off in pause.
+			set_rand(FRAME_COUNTER);
 			music_pause(1);
 
 			currentLevelId = 0;
@@ -113,8 +111,6 @@ void main(void) {
 			bank_spr(1);
 			pal_bg(main_palette);
 			pal_spr(sprite_palette);
-			set_chr_bank_0(CHR_BANK_MAIN);
-			set_chr_bank_1(CHR_BANK_MAIN+1);
 			music_play(WORLD_SONG);
 			music_pause(0);
 
@@ -140,9 +136,13 @@ void main(void) {
 				currentWorldData[i] = 0;
 
 			// TODO: Fade anim goes here.
+			ppu_off();
+			set_chr_bank_0(CHR_BANK_MAIN);
+			set_chr_bank_1(CHR_BANK_MAIN+1);
 			draw_level();
 			draw_sprites();
 			draw_hud();
+			ppu_on_all();
 			gameState = GAME_STATE_RUNNING;
 
 		} else if (gameState == GAME_STATE_RUNNING) {
@@ -157,21 +157,24 @@ void main(void) {
 			music_pause(1);
 			show_pause();
 			sfx_play(SFX_UNPAUSE, 2);
-			delay(20);
+			delay(10);
 			music_pause(0);
 			gameState = GAME_STATE_REDRAW;
 
 		} else if (gameState == GAME_STATE_REDRAW) {
+			ppu_off();
 			set_chr_bank_0(CHR_BANK_MAIN);
 			set_chr_bank_1(CHR_BANK_MAIN+1);
-
 			draw_level();
 			draw_hud();
+			ppu_on_all();
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_WORLD_MOVEMENT) {
+			ppu_off();
 			draw_level();
 			draw_sprites();
 			draw_hud();
+			ppu_on_all();
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_GAME_OVER) {
 			sfx_play(SFX_DEATH, 0);

@@ -4,7 +4,6 @@
 #pragma codeseg ("ROM_01")
 
 void banked_draw_level() {
-	ppu_off();
 	vram_inc(0);
 	vram_adr(NAMETABLE_A);
 
@@ -70,5 +69,4 @@ void banked_draw_level() {
 	}
 	vram_adr(NAMETABLE_A + 0x3c0);
 	vram_write(screenBuffer, 0x30);
-	ppu_on_all();
 }
