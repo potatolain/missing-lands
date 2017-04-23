@@ -8,6 +8,7 @@
 void do_banked_movement() {
 	if (staticPadState & PAD_START) {
 		gameState = GAME_STATE_PAUSE;
+		sfx_play(SFX_PAUSE, 2);
 		return; // Don't do anything else.
 	}
 	if (!playerVelocityLockTime) {
@@ -166,6 +167,7 @@ void do_sprite_collision() {
 					playerHealth--;
 					if (playerHealth == 0)
 						gameState = GAME_STATE_GAME_OVER;
+					sfx_play(SFX_HURT, 0);
 					update_hud();
 					playerVelocityLockTime = ENEMY_VELOCITY_LOCK_TIME;
 					if (playerXVelocity != 0)
@@ -181,7 +183,7 @@ void do_sprite_collision() {
 						scratch = currentLevel[MAP_TILE_SIZE + 32 + i];
 					}
 					currentWorldData[scratch] |= extendedSpriteData[(i<<2)+3];
-					
+					sfx_play(SFX_EARTH_CHANGE, 0);
 					// Now hide it.
 					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4))) = 0xff;
 					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+4)) = 0xff;

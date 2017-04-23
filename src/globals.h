@@ -58,6 +58,15 @@
 
 #define NUMBER_OF_LEVELS 2
 
+#define SFX_HURT 1
+#define SFX_PAUSE 2
+#define SFX_UNPAUSE 3
+#define SFX_GAME_START 4
+#define SFX_INTRO_BLIP 5
+#define SFX_DEATH 6
+#define SFX_LEVEL_COMPLETE 7
+#define SFX_EARTH_CHANGE 8
+
 // This file defines globals that can be used all over. You'll want common things in here, as the NES has very, very
 // limited ram. 
 

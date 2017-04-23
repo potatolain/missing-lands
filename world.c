@@ -85,12 +85,7 @@ void write_screen_buffer(unsigned char x, unsigned char y, char* data) {
 // Main entry point for the application.
 void main(void) {
 
-	playMusic = 1;
 	mirrorMode = MIRROR_HORIZONTAL;
-
-	// Queue up our dummy song and start playing it.
-	music_play(DUMMY_SONG);
-	music_pause(playMusic);
 
 	gameState = GAME_STATE_INIT;
 
@@ -98,8 +93,15 @@ void main(void) {
 	while(1) {
 		if (gameState == GAME_STATE_INIT) {
 
+			music_play(DUMMY_SONG);
+			music_pause(0);
+
+
 			set_prg_bank(BANK_TITLE);
 			show_title();
+			// FIXME: Once there's some ingame music, swap this back on with a new song in GAME_STATE_START_LEVEL
+			// Then also on/off in pause.
+			music_pause(1);
 
 			currentLevelId = 0;
 			gameState = GAME_STATE_START_LEVEL;
@@ -146,6 +148,7 @@ void main(void) {
 
 			set_prg_bank(BANK_TITLE);
 			show_pause();
+			sfx_play(SFX_UNPAUSE, 2);
 			gameState = GAME_STATE_REDRAW;
 
 		} else if (gameState == GAME_STATE_REDRAW) {
@@ -161,12 +164,14 @@ void main(void) {
 			draw_hud();
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_GAME_OVER) {
+			sfx_play(SFX_DEATH, 0);
 			set_prg_bank(BANK_TITLE);
 			show_game_over();
 			gameState = GAME_STATE_INIT;
 		} else if (gameState == GAME_STATE_LEVEL_COMPLETE) {
 			currentLevelId++;
 			if (currentLevelId < NUMBER_OF_LEVELS) {
+				sfx_play(SFX_LEVEL_COMPLETE, 1);
 				set_prg_bank(BANK_TITLE);
 				show_level_complete();
 				gameState = GAME_STATE_START_LEVEL;

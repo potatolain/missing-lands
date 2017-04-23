@@ -34,6 +34,7 @@ void show_title() {
 		}
 		ppu_wait_nmi();
 	}
+	sfx_play(SFX_INTRO_BLIP, 0);
 
 	ppu_off();
 	clear_screen();
@@ -55,6 +56,7 @@ void show_title() {
 		}
 		ppu_wait_nmi();
 	}
+	sfx_play(SFX_GAME_START, 0);
 		
 	
 }
