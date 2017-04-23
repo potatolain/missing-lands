@@ -170,6 +170,7 @@ void main(void) {
 			ppu_on_all();
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_WORLD_MOVEMENT) {
+			oam_hide_rest(0);
 			ppu_off();
 			draw_level();
 			draw_sprites();
