@@ -15,7 +15,8 @@
 #define BANK_LEVEL_MANIP 1
 #define BANK_MOVEMENT 1
 #define BANK_SPRITES 1
-#define BANK_LEVEL_1 2
+// Everything past this bank is levels. Wee.
+#define BANK_FIRST_LEVEL 2
 
 #define DUMMY_SONG 0
 #define SFX_BOING 0 
@@ -110,11 +111,13 @@ void main(void) {
 			set_chr_bank_0(CHR_BANK_MAIN);
 			set_chr_bank_1(CHR_BANK_MAIN+1);
 
-			// TODO: Should be defined by the level...
-			playerOverworldPosition = 27;
-			worldTotalChunks = 1;
-			playerX = 80;
-			playerY = 80;
+			set_prg_bank(BANK_FIRST_LEVEL+currentLevelId);
+
+			playerOverworldPosition = *(char*)(lvl_details);
+			playerX = *(char*)(lvl_details+1);
+			playerY = *(char*)(lvl_details+2);
+			worldTotalChunks = *(char*)(lvl_details+3);
+
 
 			playerHealth = 5;
 			worldChunkCount = 0;
@@ -154,9 +157,17 @@ void main(void) {
 			gameState = GAME_STATE_INIT;
 		} else if (gameState == GAME_STATE_LEVEL_COMPLETE) {
 			currentLevelId++;
+			if (currentLevelId < NUMBER_OF_LEVELS) {
+				set_prg_bank(BANK_TITLE);
+				show_level_complete();
+				gameState = GAME_STATE_START_LEVEL;
+			} else {
+				gameState = GAME_STATE_WIN;
+			}
+		} else if (gameState == GAME_STATE_WIN) {
 			set_prg_bank(BANK_TITLE);
-			show_level_complete();
-			gameState = GAME_STATE_START_LEVEL;
+			show_win_screen();
+			gameState = GAME_STATE_INIT;
 		}
 	}
 }
@@ -168,7 +179,9 @@ void do_movement() {
 
 void load_screen() {
 	// Load up the data into currentLevel
-	set_prg_bank(BANK_LEVEL_1);
+	set_prg_bank(BANK_FIRST_LEVEL+currentLevelId);
+
+	// NOTE: Yes, this says lvl1 - it'll line up with whatever we get though.
 	memcpy(currentLevel, lvl1 + (playerOverworldPosition << 8), 256);
 
 }
@@ -196,7 +209,7 @@ unsigned char test_collision(unsigned char tileId, unsigned char isPlayer) {
 
 	switch (temp) {
 		case 15: 
-			if (worldChunkCount >= worldTotalChunks) {
+			if (isPlayer && worldChunkCount >= worldTotalChunks) {
 				gameState = GAME_STATE_LEVEL_COMPLETE;
 			}
 			// else fallthru

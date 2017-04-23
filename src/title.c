@@ -37,7 +37,7 @@ void show_title() {
 
 	ppu_off();
 	clear_screen();
-	put_str(NTADR_A(2,  8), "    - Missing Lands -     ");
+	put_str(NTADR_A(2,  6), "    - Missing Lands -     ");
 	put_str(NTADR_A(2, 12), "You are a tiny frog trapped");
 	put_str(NTADR_A(2, 13), "in a tiny world.");
 	put_str(NTADR_A(2, 16), "You remember a time where");
@@ -118,6 +118,40 @@ void show_level_complete() {
 	
 }
 
+void show_win_screen() {
+	oam_hide_rest(0);
+	ppu_off();
+	clear_screen();
+
+	set_chr_bank_0(CHR_BANK_TITLE);
+	set_chr_bank_1(CHR_BANK_TITLE+1);
+	pal_col(1,0x19);//set dark green color
+	pal_col(17,0x19);
+
+
+	// Show a message to the user.
+	put_str(NTADR_A(8,4), "Congratulations!");
+	put_str(NTADR_A(2,10), "You have completed Missing");
+	put_str(NTADR_A(2,11), "Worlds!");
+	put_str(NTADR_A(2,15), "By your diligence, the pieces");
+	put_str(NTADR_A(2,16), "of your tiny world have come");
+	put_str(NTADR_A(2,17), "back together.");
+	put_str(NTADR_A(2,20), "Your journey is now over.");
+	put_str(NTADR_A(5,26), "Thanks for playing!");
+
+
+	ppu_on_all();
+
+	// Wait for start
+	while (1) {
+		currentPadState = pad_trigger(0);
+		if (currentPadState & PAD_START) {
+			break;
+		}
+		ppu_wait_nmi();
+	}		
+	
+}
 
 void banked_draw_hud() {
 	ppu_off();

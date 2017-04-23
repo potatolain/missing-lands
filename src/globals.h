@@ -28,6 +28,7 @@
 #define GAME_STATE_START_LEVEL 4
 #define GAME_STATE_INIT 255
 #define GAME_STATE_GAME_OVER 250
+#define GAME_STATE_WIN 251
 
 #define LEVEL_FRAGMENT_1 0x01
 #define LEVEL_FRAGMENT_2 0x02
@@ -99,7 +100,8 @@ extern char screenBuffer[0x30];
 extern char currentWorldData[64];
 extern char extendedSpriteData[56];
 
-
+// Hackattack- get at the stuff in level data from whatever bank is loaded.
+extern const char lvl_details[4];
 
 
 extern void put_str(unsigned int adr, const char *str);
