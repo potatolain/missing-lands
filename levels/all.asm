@@ -14,3 +14,6 @@
 .segment "ROM_05"
 	.byte 27, 80, 80, 3
 	.include "levels/processed/lvl4_tiles.asm"
+.segment "ROM_06"
+	.byte 27, 80, 80, 5
+	.include "levels/processed/lvl5_tiles.asm"
