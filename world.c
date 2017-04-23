@@ -174,6 +174,7 @@ void main(void) {
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_GAME_OVER) {
 			sfx_play(SFX_DEATH, 0);
+			music_pause(1);
 			set_prg_bank(BANK_TITLE);
 			show_game_over();
 			gameState = GAME_STATE_INIT;
