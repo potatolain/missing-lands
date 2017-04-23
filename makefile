@@ -7,7 +7,7 @@
 ### USER EDITABLE STUFF STARTS HERE
 
 ROM_NAME=world
-OBJECTS_TO_BUILD=$(ROM_NAME).c levels/processed/lvl1_tiles.asm levels/processed/lvl2_tiles.asm bin/build_info.h bin/crt0.o bin/$(ROM_NAME).o bin/title.o bin/level_manip.o bin/movement.o bin/sprites.o
+OBJECTS_TO_BUILD=$(ROM_NAME).c levels/processed/lvl1_tiles.asm levels/processed/lvl2_tiles.asm levels/processed/lvl3_tiles.asm bin/build_info.h bin/crt0.o bin/$(ROM_NAME).o bin/title.o bin/level_manip.o bin/movement.o bin/sprites.o
 
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 MAIN_COMPILER=./tools/cc65/bin/cc65

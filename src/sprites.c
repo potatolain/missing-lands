@@ -27,7 +27,7 @@ const unsigned char sprite_data[] = {
 void banked_draw_sprites() {
 	for (i = 0; i < 12; i++) {
 		sprite_directions[i] = SPRITE_DIRECTION_UNDEF;
-		sprite_direction_time[i] = 0;
+		sprite_direction_time[i] = SPRITE_MIN_DIRECTION_TIME-10;
 	}
 
 	for (i = 0; i < 12 && currentLevel[MAP_TILE_SIZE + (i<<1)] != 255; ++i) {
