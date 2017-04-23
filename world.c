@@ -45,6 +45,13 @@ char extendedSpriteData[56];
 char screenBuffer[0x30];
 char currentLevel[256];
 char currentWorldData[64];
+char world_sprite_state[64];
+
+const unsigned char BYTE_TO_BIT[] = {
+	0x01, 0x02, 0x04, 0x08,
+	0x10, 0x20, 0x40, 0x80
+};
+
 
 
 // Local to this file.
@@ -133,8 +140,10 @@ void main(void) {
 			playerInvulnTime = 30; // You get a buffer, just in case.
 
 
-			for (i = 0; i < 64; i++)
+			for (i = 0; i < 64; i++) {
 				currentWorldData[i] = 0;
+				world_sprite_state[i] = 0;
+			}
 
 			// TODO: Fade anim goes here.
 			ppu_off();

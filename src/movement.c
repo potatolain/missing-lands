@@ -5,6 +5,7 @@
 #pragma rodataseg ("ROM_01")
 #pragma codeseg ("ROM_01")
 
+
 void do_banked_movement() {
 	#if DEBUG
 		if (staticPadState & PAD_START && currentPadState & PAD_SELECT) {
@@ -210,6 +211,25 @@ void do_sprite_collision() {
 
 					
 					break;
+				case SPRITE_TYPE_HEART:
+					if (playerHealth < 5)
+						playerHealth++;
+		
+					// Mario toad voice "Baaaaii"
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4))) = 0xff;
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+4)) = 0xff;
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+8)) = 0xff;
+					(*(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4)+12)) = 0xff;
+					if (i < 8)
+						world_sprite_state[playerOverworldPosition] |= BYTE_TO_BIT[i];
+
+					sfx_play(SFX_HEART, 1);
+					update_hud();
+
+
+
+					break;
+
 				default: 
 					// Eh, do nothing. It shall live on.
 					break;

@@ -21,7 +21,8 @@ const unsigned char sprite_data[] = {
 	// Killer tomato
 	SPRITE_TYPE_ENEMY, SPRITE_SIZE_NORMAL | SPRITE_PALETTE_3 | SPRITE_ANIM_DEFAULT, 0x84, 0,
 	// Skeleton Skeletron
-	SPRITE_TYPE_ENEMY, SPRITE_SIZE_NORMAL | SPRITE_PALETTE_3 | SPRITE_ANIM_DEFAULT, 0x88, 0
+	SPRITE_TYPE_ENEMY, SPRITE_SIZE_NORMAL | SPRITE_PALETTE_3 | SPRITE_ANIM_DEFAULT, 0x88, 0,
+	SPRITE_TYPE_HEART, SPRITE_SIZE_NORMAL | SPRITE_PALETTE_3 | SPRITE_ANIM_NONE, 0x0c, 0
 };
 
 void banked_draw_sprites() {
@@ -52,6 +53,10 @@ void banked_draw_sprites() {
 			scratch5 = currentLevel[MAP_TILE_SIZE + 32 + i];
 		}
 		if (currentWorldData[scratch5] & extendedSpriteData[(i<<2)+3]) {
+			scratch2 = 0xf0;
+		}
+		// Hide hearts that were already collected.
+		if (i < 8 && (world_sprite_state[playerOverworldPosition] & BYTE_TO_BIT[i])) {
 			scratch2 = 0xf0;
 		}
 

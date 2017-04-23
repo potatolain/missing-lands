@@ -1,4 +1,4 @@
-#define DEBUG 1
+#define DEBUG 0
 #define NUMBER_OF_LEVELS 6
 #define PLAYER_DIRECTION_LEFT 0x24
 #define PLAYER_DIRECTION_RIGHT 0x20
@@ -66,6 +66,7 @@
 #define SFX_DEATH 6
 #define SFX_LEVEL_COMPLETE 7
 #define SFX_EARTH_CHANGE 8
+#define SFX_HEART 9
 
 // This file defines globals that can be used all over. You'll want common things in here, as the NES has very, very
 // limited ram. 
@@ -111,6 +112,8 @@ extern unsigned char currentLevel[256];
 extern char screenBuffer[0x30];
 extern char currentWorldData[64];
 extern char extendedSpriteData[56];
+extern char world_sprite_state[64];
+extern const unsigned char BYTE_TO_BIT[8];
 
 // Hackattack- get at the stuff in level data from whatever bank is loaded.
 extern const char lvl_details[4];
