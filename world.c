@@ -19,6 +19,7 @@
 #define BANK_FIRST_LEVEL 2
 
 #define DUMMY_SONG 0
+#define WORLD_SONG 1
 #define SFX_BOING 0 
 
 // Globals! Defined as externs in src/globals.h
@@ -114,6 +115,8 @@ void main(void) {
 			pal_spr(sprite_palette);
 			set_chr_bank_0(CHR_BANK_MAIN);
 			set_chr_bank_1(CHR_BANK_MAIN+1);
+			music_play(WORLD_SONG);
+			music_pause(0);
 
 			set_prg_bank(BANK_FIRST_LEVEL+currentLevelId);
 
@@ -150,8 +153,11 @@ void main(void) {
 		} else if (gameState == GAME_STATE_PAUSE) {
 
 			set_prg_bank(BANK_TITLE);
+			music_pause(1);
 			show_pause();
 			sfx_play(SFX_UNPAUSE, 2);
+			delay(20);
+			music_pause(0);
 			gameState = GAME_STATE_REDRAW;
 
 		} else if (gameState == GAME_STATE_REDRAW) {
@@ -172,6 +178,7 @@ void main(void) {
 			show_game_over();
 			gameState = GAME_STATE_INIT;
 		} else if (gameState == GAME_STATE_LEVEL_COMPLETE) {
+			music_pause(1);
 			currentLevelId++;
 			if (currentLevelId < NUMBER_OF_LEVELS) {
 				sfx_play(SFX_LEVEL_COMPLETE, 1);
