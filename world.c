@@ -142,8 +142,18 @@ void main(void) {
 			currentPadState = pad_poll(0);
 			do_movement();
 			ppu_wait_nmi();
+		} else if (gameState == GAME_STATE_PAUSE) {
+
+			set_prg_bank(BANK_TITLE);
+			show_pause();
+			gameState = GAME_STATE_REDRAW;
+
 		} else if (gameState == GAME_STATE_REDRAW) {
+			set_chr_bank_0(CHR_BANK_MAIN);
+			set_chr_bank_1(CHR_BANK_MAIN+1);
+
 			draw_level();
+			draw_hud();
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_WORLD_MOVEMENT) {
 			draw_level();
@@ -151,7 +161,6 @@ void main(void) {
 			draw_hud();
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_GAME_OVER) {
-			// CRASH. FIXME: Don't do that.
 			set_prg_bank(BANK_TITLE);
 			show_game_over();
 			gameState = GAME_STATE_INIT;

@@ -26,6 +26,7 @@
 #define GAME_STATE_WORLD_MOVEMENT 2
 #define GAME_STATE_LEVEL_COMPLETE 3
 #define GAME_STATE_START_LEVEL 4
+#define GAME_STATE_PAUSE 100
 #define GAME_STATE_INIT 255
 #define GAME_STATE_GAME_OVER 250
 #define GAME_STATE_WIN 251
@@ -60,7 +61,7 @@
 // This file defines globals that can be used all over. You'll want common things in here, as the NES has very, very
 // limited ram. 
 
-extern unsigned char currentPadState;
+extern unsigned char currentPadState, staticPadState;
 extern unsigned char i, j, scratch, scratch2, scratch3, scratch4, scratch5; 
 extern unsigned int scratchInt;
 extern unsigned char playerOverworldPosition, currentLevelId;
@@ -71,6 +72,7 @@ extern unsigned char playerHealth, worldChunkCount, worldTotalChunks;
 extern unsigned char FRAME_COUNTER;
 
 #pragma zpsym ("currentPadState")
+#pragma zpsym ("staticPadState")
 #pragma zpsym ("i")
 #pragma zpsym ("j")
 #pragma zpsym ("scratchInt")

@@ -6,6 +6,10 @@
 #pragma codeseg ("ROM_01")
 
 void do_banked_movement() {
+	if (staticPadState & PAD_START) {
+		gameState = GAME_STATE_PAUSE;
+		return; // Don't do anything else.
+	}
 	if (!playerVelocityLockTime) {
 		if (currentPadState & PAD_RIGHT) {
 			playerXVelocity = PLAYER_VELOCITY;

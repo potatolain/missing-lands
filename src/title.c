@@ -16,11 +16,11 @@ void show_title() {
 	pal_col(17,0x19);
 
 	// Show a message to the user.
-	put_str(NTADR_A(2,8), "  - Missing Lands -");
-	put_str(NTADR_A(2,12), "Ludum Dare 38 Entry");
-	put_str(NTADR_A(2,13), "Press Start!");
+	put_str(NTADR_A(7,6),  "- Missing Lands -");
+	put_str(NTADR_A(8,17),  "- Press Start -");
 
 	// Also show some cool build info because we can.
+	put_str(NTADR_A(2,23), "Ludum Dare 38 Entry");
 	put_str(NTADR_A(2,24), "Built: " BUILD_DATE);
 	put_str(NTADR_A(2,25), "Build #" BUILD_NUMBER_STR " (" GIT_COMMIT_ID_SHORT " - " GIT_BRANCH ")");
 	put_str(NTADR_A(2,26), "Commit counter: " COMMIT_COUNT_STR);
@@ -37,15 +37,15 @@ void show_title() {
 
 	ppu_off();
 	clear_screen();
-	put_str(NTADR_A(2,  6), "    - Missing Lands -     ");
+	put_str(NTADR_A(7, 6), "- Missing Lands -");
 	put_str(NTADR_A(2, 12), "You are a tiny frog trapped");
 	put_str(NTADR_A(2, 13), "in a tiny world.");
 	put_str(NTADR_A(2, 16), "You remember a time where");
-	put_str(NTADR_A(2, 17), "the world was great.");
-	put_str(NTADR_A(2, 20), "The former lands are");
-	put_str(NTADR_A(2, 21), "scattered around you. Can");
-	put_str(NTADR_A(2, 22), "you restore this world to");
-	put_str(NTADR_A(2, 23), "its former glory?");
+	put_str(NTADR_A(2, 17), "your world was vast.");
+	put_str(NTADR_A(2, 20), "The pieces of that world");
+	put_str(NTADR_A(2, 21), "are scattered around you.");
+	put_str(NTADR_A(2, 22), "Can you restore this world");
+	put_str(NTADR_A(2, 23), "to its former glory?");
 	ppu_on_all();
 
 	while (1) {
@@ -203,4 +203,30 @@ void banked_draw_hud() {
 
 	ppu_on_all();
 
+}
+
+void show_pause() {
+	ppu_off();
+	clear_screen();
+	vram_adr(NAMETABLE_A+0x3c0);
+	vram_fill(0xff, 0x40);
+
+	set_chr_bank_0(CHR_BANK_TITLE);
+	set_chr_bank_1(CHR_BANK_TITLE+1);
+
+	// Show a message to the user.
+	put_str(NTADR_A(10,15), "- Paused -");
+
+	// IMPORTANT: Don't show sprites... we don't wanna lose those so we don't touch em.
+	ppu_on_bg();
+
+	// Wait for start
+	while (1) {
+		currentPadState = pad_trigger(0);
+		if (currentPadState & PAD_START) {
+			break;
+		}
+		ppu_wait_nmi();
+	}		
+	
 }
