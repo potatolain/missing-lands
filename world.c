@@ -230,17 +230,31 @@ unsigned char test_collision(unsigned char tileId, unsigned char isPlayer) {
 				gameState = GAME_STATE_LEVEL_COMPLETE;
 			}
 			// else fallthru
-		case 2:
-		case 7:
-		case 14: 
-		case 21:
-		case 24: 
-		case 32:
-		case 29:
-		case 37:
-			return 1;
-		default:
+		// This would probably be cleaner with a bunch of if statements
+		case 1:
+		case 3:
+		case 4:
+		case 9:
+		case 10: 
+		case 11:
+		case 16: 
+		case 17:
+		case 18:
+		case 19:
+		case 20:
+		case 22:
+		case 23:
+		case 25:
+		case 26:
+		case 27:
+		case 28:
+		case 33:
+		case 34:
+		case 35:
+		case 36:
 			return 0;
+		default:
+			return 1;
 	}
 }
 
