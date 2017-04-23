@@ -68,14 +68,16 @@ void show_game_over() {
 
 	set_chr_bank_0(CHR_BANK_TITLE);
 	set_chr_bank_1(CHR_BANK_TITLE+1);
-	pal_col(1,0x19);//set dark green color
-	pal_col(17,0x19);
+	pal_col(1,0x06);//set dark red color
+	pal_col(17,0x06);
 
 
 	// Show a message to the user.
-	put_str(NTADR_A(2,8), "GAME OVER!");
-	put_str(NTADR_A(2,12), "You died...");
-	put_str(NTADR_A(2,17), "- Press Start -");
+	put_str(NTADR_A(11,6), "GAME OVER!");
+	put_str(NTADR_A(4,12), "Your quest has ended");
+	put_str(NTADR_A(4,16), "Would you like to give");
+	put_str(NTADR_A(4,17), "   it another try?");
+	put_str(NTADR_A(8,22), "- Press Start -");
 
 
 	ppu_on_all();
