@@ -71,7 +71,6 @@ void banked_update_sprites() {
 			continue;
 
 		scratchInt = (0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4));
-		// TODO: Different behavior for full anim
 		if ((extendedSpriteData[(i<<2)+1] & SPRITE_ANIM_MASK) == SPRITE_ANIM_DEFAULT) {
 			scratch = extendedSpriteData[(i<<2)+2];
 			scratch += (FRAME_COUNTER & 0x10) ? 0 : 2;
