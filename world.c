@@ -20,6 +20,7 @@
 
 #define DUMMY_SONG 0
 #define WORLD_SONG 1
+#define SONG_EOG 2
 #define SFX_BOING 0 
 
 // Globals! Defined as externs in src/globals.h
@@ -195,6 +196,8 @@ void main(void) {
 				gameState = GAME_STATE_WIN;
 			}
 		} else if (gameState == GAME_STATE_WIN) {
+			music_play(2);
+			music_pause(0);
 			set_prg_bank(BANK_TITLE);
 			show_win_screen();
 			gameState = GAME_STATE_INIT;
