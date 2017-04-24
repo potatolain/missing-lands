@@ -1,5 +1,7 @@
 # Missing Lands
 
+![screenie](http://i.imgur.com/3Ia5k5m.gifv)
+
 This is the code behind a little game called Missing Lands. It was built in 48 hours for Ludum Dare.
 
 It is based off of [nes-c-boilerplate](https://github.com/cppchriscpp/nes-c-boilerplate). If you are attempting to
