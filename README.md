@@ -1,6 +1,6 @@
 # Missing Lands
 
-![screenie](http://i.imgur.com/3Ia5k5m.gifv)
+![screenie](http://i.imgur.com/3Ia5k5m.gif)
 
 This is the code behind a little game called Missing Lands. It was built in 48 hours for Ludum Dare.
 
