@@ -101,7 +101,7 @@ void main(void) {
 
 	// Now we wait for input from the user, and do dumb things!
 	while(1) {
-		if (gameState == GAME_STATE_INIT) {
+		if (gameState == GAME_STATE_INIT)  {
 
 			music_play(DUMMY_SONG);
 			music_pause(0);
@@ -153,6 +153,7 @@ void main(void) {
 			draw_sprites();
 			draw_hud();
 			ppu_on_all();
+			animate_fadein(5);
 			gameState = GAME_STATE_RUNNING;
 
 		} else if (gameState == GAME_STATE_RUNNING) {
@@ -167,17 +168,27 @@ void main(void) {
 			music_pause(1);
 			show_pause();
 			sfx_play(SFX_UNPAUSE, 2);
-			delay(10);
 			music_pause(0);
-			gameState = GAME_STATE_REDRAW;
+			// gameState = GAME_STATE_REDRAW;
 
-		} else if (gameState == GAME_STATE_REDRAW) {
 			ppu_off();
 			set_chr_bank_0(CHR_BANK_MAIN);
 			set_chr_bank_1(CHR_BANK_MAIN+1);
 			draw_level();
 			draw_hud();
 			ppu_on_all();
+			animate_fadein(2);
+			gameState = GAME_STATE_RUNNING;
+
+		} else if (gameState == GAME_STATE_REDRAW) {
+			animate_fadeout(5);
+			ppu_off();
+			set_chr_bank_0(CHR_BANK_MAIN);
+			set_chr_bank_1(CHR_BANK_MAIN+1);
+			draw_level();
+			draw_hud();
+			ppu_on_all();
+			animate_fadein(5);
 			gameState = GAME_STATE_RUNNING;
 		} else if (gameState == GAME_STATE_WORLD_MOVEMENT) {
 			oam_hide_rest(0);
@@ -308,5 +319,26 @@ void update_hud() {
 	screenBuffer[10] = HUD_NUMBERS+worldChunkCount;
 	screenBuffer[11] = NT_UPD_EOF;
 	set_vram_update(screenBuffer);
+
+}
+
+void animate_fadeout(unsigned char _delay) {
+	pal_bright(3);
+	delay(_delay);;
+	pal_bright(2);
+	delay(_delay);;
+	pal_bright(1);
+	delay(_delay);;
+	pal_bright(0);
+}
+
+void animate_fadein(unsigned char _delay) {
+	pal_bright(1);
+	delay(_delay);;
+	pal_bright(2);
+	delay(_delay);;
+	pal_bright(3);
+	delay(_delay);;
+	pal_bright(4);
 
 }

@@ -1,4 +1,4 @@
-#define DEBUG 0
+#define DEBUG 1
 #define NUMBER_OF_LEVELS 6
 #define PLAYER_DIRECTION_LEFT 0x24
 #define PLAYER_DIRECTION_RIGHT 0x20
@@ -123,3 +123,6 @@ extern void put_str(unsigned int adr, const char *str);
 extern void clear_screen();
 extern unsigned char test_collision(unsigned char tileId, unsigned char isPlayer);
 void update_hud();
+
+void animate_fadeout(unsigned char _delay);
+void animate_fadein(unsigned char _delay);

@@ -9,6 +9,7 @@
 // TODO: We have a nice way to fade our palette. Can we do that please?
 void show_title() {
 
+	pal_bright(0);
 	set_chr_bank_0(CHR_BANK_TITLE);
 	set_chr_bank_1(CHR_BANK_TITLE+1);
 	ppu_off();
@@ -26,6 +27,7 @@ void show_title() {
 	put_str(NTADR_A(2,25), "Build #" BUILD_NUMBER_STR " (" GIT_COMMIT_ID_SHORT " - " GIT_BRANCH ")");
 	put_str(NTADR_A(2,26), "Commit counter: " COMMIT_COUNT_STR);
 	ppu_on_all();
+	animate_fadein(5);
 
 	// Wait for start
 	while (1) {
@@ -36,6 +38,7 @@ void show_title() {
 		ppu_wait_nmi();
 	}
 	sfx_play(SFX_INTRO_BLIP, 0);
+	animate_fadeout(5);
 
 	ppu_off();
 	clear_screen();
@@ -50,6 +53,7 @@ void show_title() {
 	put_str(NTADR_A(2, 26), "to its former glory?");
 
 	ppu_on_all();
+	animate_fadein(5);
 
 	while (1) {
 		currentPadState = pad_trigger(0);
@@ -59,12 +63,14 @@ void show_title() {
 		ppu_wait_nmi();
 	}
 	sfx_play(SFX_GAME_START, 0);
+	animate_fadeout(5);
 		
 	
 }
 
 void show_game_over() {
 	oam_hide_rest(0);
+	animate_fadeout(5);
 	ppu_off();
 	clear_screen();
 
@@ -83,6 +89,7 @@ void show_game_over() {
 
 
 	ppu_on_all();
+	animate_fadein(5);
 
 	// Wait for start
 	while (1) {
@@ -91,12 +98,14 @@ void show_game_over() {
 			break;
 		}
 		ppu_wait_nmi();
-	}		
+	}
+	animate_fadeout(5);
 	
 }
 
 void show_level_complete() {
 	oam_hide_rest(0);
+	animate_fadeout(5);
 	ppu_off();
 	clear_screen();
 
@@ -110,8 +119,8 @@ void show_level_complete() {
 	put_str(NTADR_A(8,8), "Level Complete!");
 	put_str(NTADR_A(8,17), "- Press Start -");
 
-
 	ppu_on_all();
+	animate_fadein(5);
 
 	// Wait for start
 	while (1) {
@@ -121,10 +130,12 @@ void show_level_complete() {
 		}
 		ppu_wait_nmi();
 	}		
+	animate_fadeout(5);
 	
 }
 
 void show_win_screen() {
+	animate_fadeout(5);
 	oam_hide_rest(0);
 	ppu_off();
 	clear_screen();
@@ -146,6 +157,7 @@ void show_win_screen() {
 	put_str(NTADR_A(6,26), "Thanks for playing!");
 
 	ppu_on_all();
+	animate_fadein(5);
 
 	// Wait for start
 	while (1) {
@@ -189,6 +201,7 @@ void show_win_screen() {
 		ppu_wait_nmi();
 	}
 	oam_hide_rest(0);
+	animate_fadeout(5);
 	
 }
 
@@ -246,6 +259,7 @@ void banked_draw_hud() {
 }
 
 void show_pause() {
+	animate_fadeout(5);
 	ppu_off();
 	clear_screen();
 	vram_adr(NAMETABLE_A+0x3c0);
@@ -259,6 +273,7 @@ void show_pause() {
 
 	// IMPORTANT: Don't show sprites... we don't wanna lose those so we don't touch em.
 	ppu_on_bg();
+	animate_fadein(1);
 
 	// Wait for start
 	while (1) {
@@ -268,5 +283,5 @@ void show_pause() {
 		}
 		ppu_wait_nmi();
 	}		
-	
+	animate_fadeout(1);
 }
