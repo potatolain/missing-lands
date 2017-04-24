@@ -324,7 +324,7 @@ void update_hud() {
 
 void animate_fadeout(unsigned char _delay) {
 	pal_bright(3);
-	delay(_delay);;
+	delay(_delay);
 	pal_bright(2);
 	delay(_delay);;
 	pal_bright(1);
