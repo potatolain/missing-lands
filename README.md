@@ -29,6 +29,14 @@ This repository is linked in with CircleCI. As such, any changes to master are a
 
 [Download Latest ROM](https://circleci-tkn.rhcloud.com/api/v1/project/cppchriscpp/missing-lands/tree/master/latest/artifacts/hworld.nes)
 
+## Credits
+
+[NESLib](https://shiru.untergrund.net/software.shtml) by [Shiru](http://shiru.untergrund.net/)
+
+[Who's Cuter Font](https://forums.nesdev.com/viewtopic.php?f=21&t=10284&start=0) by [Damian Yerrick (Tepples)](http://pineight.com)
+
+[nes-c-boilerplate](https://github.com/cppchriscpp/nes-c-boilerplate)
+
 ## License
 
 All code/resources are available under the MIT license. Happy hacking!
