@@ -159,9 +159,9 @@ void do_sprite_collision() {
 		scratch5 = *(char*)(0x200 + FIRST_ENEMY_SPRITE_ID + (i<<4));
 		// Make enemies a touch smaller so they're less likely to be hit by accident.
 		if (extendedSpriteData[(i<<2)] == SPRITE_TYPE_ENEMY) {
-			scratch4 += 2;
-			scratch5 += 2;
-			scratch3 -= 4;
+			scratch4 += 5;
+			scratch5 += 5;
+			scratch3 = 6;
 		}
 
 		if (playerX < scratch4 + scratch3 && playerX + PLAYER_WIDTH > scratch4 && 
@@ -181,9 +181,25 @@ void do_sprite_collision() {
 					playerVelocityLockTime = ENEMY_VELOCITY_LOCK_TIME;
 					playerInvulnTime = (ENEMY_VELOCITY_LOCK_TIME*2);
 					if (playerXVelocity != 0)
-						playerXVelocity = ((0 - playerXVelocity) >> 1) || 1;
+						playerXVelocity = ((0u - playerXVelocity));
 					if (playerYVelocity != 0)
-						playerYVelocity = ((0 - playerXVelocity) >> 1) || 1; // Boink!
+						playerYVelocity = ((0u - playerYVelocity)); // Boink!
+
+					// If you aren't moving... force it.
+					if (playerXVelocity == 0 && playerYVelocity == 0)
+						playerYVelocity = 1;
+
+					// And then mother nature was like "slooooooow doooown"
+					if (playerXVelocity == PLAYER_VELOCITY*2)
+						playerXVelocity -= 1;
+					else if (playerXVelocity > 100)
+						playerXVelocity += 1;
+
+					if (playerYVelocity == PLAYER_VELOCITY*2)
+						playerYVelocity -= 1;
+					else if (playerYVelocity > 100)
+						playerYVelocity += 1;
+
 
 					break;
 
