@@ -51,46 +51,29 @@ void do_banked_movement() {
 		--playerInvulnTime;
 
 	if (playerX > SCREEN_EDGE_RIGHT) {
-		//if (playerOverworldPosition < LEVEL_WIDTH*LEVEL_HEIGHT) {
-			playerOverworldPosition += LEVEL_WIDTH;
-			playerX = SCREEN_EDGE_LEFT+5;
-			// TODO: Cool ppu scrolling anim
-			gameState = GAME_STATE_WORLD_MOVEMENT;
-			return;
-		/*} else if (!(playerXVelocity & 0x80)) {
-			playerXVelocity = 0;
-		}*/
+		playerOverworldPosition += LEVEL_WIDTH;
+		playerX = SCREEN_EDGE_LEFT+5;
+		// TODO: Cool ppu scrolling anim
+		gameState = GAME_STATE_WORLD_MOVEMENT;
+		return;
 	} else if (playerX < SCREEN_EDGE_LEFT) {
-		//if (playerOverworldPosition >= LEVEL_WIDTH) {
-			playerOverworldPosition -= LEVEL_WIDTH;
-			playerX = SCREEN_EDGE_RIGHT-5;
-			gameState = GAME_STATE_WORLD_MOVEMENT;
-			return;
-		/*} else if (playerXVelocity & 0x80) {
-			playerXVelocity = 0;
-		}*/
-
+		playerOverworldPosition -= LEVEL_WIDTH;
+		playerX = SCREEN_EDGE_RIGHT-5;
+		gameState = GAME_STATE_WORLD_MOVEMENT;
+		return;
 	}
 
 	if (playerY > SCREEN_EDGE_BOTTOM) {
-		//if (playerOverworldPosition < LEVEL_WIDTH*LEVEL_HEIGHT) {
-			++playerOverworldPosition;
-			playerY = SCREEN_EDGE_TOP+5;
-			// TODO: Cool ppu scrolling anim
-			gameState = GAME_STATE_WORLD_MOVEMENT;
-			return;
-		/*} else if (!(playerYVelocity & 0x80)) {
-			playerYVelocity = 0;
-		}*/
+		++playerOverworldPosition;
+		playerY = SCREEN_EDGE_TOP+5;
+		// TODO: Cool ppu scrolling anim
+		gameState = GAME_STATE_WORLD_MOVEMENT;
+		return;
 	} else if (playerY < SCREEN_EDGE_TOP) {
-		//if (playerOverworldPosition > 0) {
-			--playerOverworldPosition;
-			playerY = SCREEN_EDGE_BOTTOM-5;
-			gameState = GAME_STATE_WORLD_MOVEMENT;
-			return;
-		/*} else if (playerYVelocity & 0x80) {
-			playerYVelocity = 0;
-		}*/
+		--playerOverworldPosition;
+		playerY = SCREEN_EDGE_BOTTOM-5;
+		gameState = GAME_STATE_WORLD_MOVEMENT;
+		return;
 
 	}
 
@@ -219,10 +202,11 @@ void do_sprite_collision() {
 					worldChunkCount++;
 					update_hud();
 					// Please try not to vomit. I need 2 screen updates, so I trigger one after the other, and wait for nmi so they don't step on eachother.
-					if (scratch == playerOverworldPosition || worldChunkCount == worldTotalChunks) {
+					// NOTE: This blip is actually kinda informative - let's always show it.
+					// if (scratch == playerOverworldPosition || worldChunkCount == worldTotalChunks) {
 						ppu_wait_nmi();
 						gameState = GAME_STATE_REDRAW;
-					}
+					// }
 
 
 					
