@@ -7,12 +7,18 @@
 
 
 void do_banked_movement() {
+	int maxVelocity = (PLAYER_MAX_VELOCITY/2);
 	#if DEBUG
 		if (staticPadState & PAD_START && currentPadState & PAD_SELECT) {
 			gameState = GAME_STATE_LEVEL_COMPLETE;
 			return;
 		}
 	#endif
+
+	if (currentPadState & PAD_B) {
+		maxVelocity = PLAYER_MAX_VELOCITY;
+	}
+
 	if (staticPadState & PAD_START) {
 		gameState = GAME_STATE_PAUSE;
 		sfx_play(SFX_PAUSE, 2);
@@ -20,58 +26,82 @@ void do_banked_movement() {
 	}
 	if (!playerVelocityLockTime) {
 		if (currentPadState & PAD_RIGHT) {
-			playerXVelocity = PLAYER_VELOCITY;
+			if (playerXVelocity < maxVelocity) {
+				playerXVelocity += PLAYER_VELOCITY_ACCEL;
+			} else if (playerXVelocity > maxVelocity) {
+				playerXVelocity -= PLAYER_VELOCITY_ACCEL;
+			}
 		} else if (currentPadState & PAD_LEFT) {
-			playerXVelocity = 0u-PLAYER_VELOCITY;
-		} else {
-			playerXVelocity = 0;
+			if (abs(playerXVelocity) < maxVelocity) {
+				playerXVelocity -= PLAYER_VELOCITY_ACCEL;
+			} else if (abs(playerXVelocity) > maxVelocity) {
+				playerXVelocity += PLAYER_VELOCITY_ACCEL;
+			}
+		} else if (playerXVelocity != 0) {
+			if (playerXVelocity > 0) {
+				playerXVelocity -= PLAYER_VELOCITY_ACCEL*2;
+			} else {
+				playerXVelocity += PLAYER_VELOCITY_ACCEL*2;
+			}
 		}
 
 		if (currentPadState & PAD_UP) {
-			playerYVelocity = 0u-PLAYER_VELOCITY;
+			if (abs(playerYVelocity) < maxVelocity) {
+				playerYVelocity -= PLAYER_VELOCITY_ACCEL;
+			} else if (abs(playerYVelocity) > maxVelocity) {
+				playerYVelocity += PLAYER_VELOCITY_ACCEL;
+			}
 		} else if (currentPadState & PAD_DOWN) {
-			playerYVelocity = PLAYER_VELOCITY;
-		} else {
-			playerYVelocity = 0;
+			if (playerYVelocity < maxVelocity) {
+				playerYVelocity += PLAYER_VELOCITY_ACCEL;
+			} else if (playerYVelocity > maxVelocity) {
+				playerYVelocity -= PLAYER_VELOCITY_ACCEL;
+			}
+		} else if (playerYVelocity != 0) {
+			if (playerYVelocity > 0) {
+				playerYVelocity -= PLAYER_VELOCITY_ACCEL*2;
+			} else {
+				playerYVelocity += PLAYER_VELOCITY_ACCEL*2;
+			}
+			if (abs(playerYVelocity) == 1) {
+				playerYVelocity = 0;
+			}
 		}
+		
 		if (playerXVelocity != 0 || playerYVelocity != 0) {
 			playerAnimState++;
 		} else {
 			playerAnimState = 0;
 		}
 
-		if (currentPadState & PAD_B) {
-			playerXVelocity <<= 1;
-			playerYVelocity <<= 1;
-		}
 	} else {
 		--playerVelocityLockTime;
 	}
 	if (playerInvulnTime)
 		--playerInvulnTime;
 
-	if (playerX > SCREEN_EDGE_RIGHT) {
+	if ((playerX>>2) > SCREEN_EDGE_RIGHT) {
 		playerOverworldPosition += LEVEL_WIDTH;
-		playerX = SCREEN_EDGE_LEFT+5;
+		playerX = (SCREEN_EDGE_LEFT+5)<<2;
 		// TODO: Cool ppu scrolling anim
 		gameState = GAME_STATE_WORLD_MOVEMENT;
 		return;
-	} else if (playerX < SCREEN_EDGE_LEFT) {
+	} else if ((playerX>>2) < SCREEN_EDGE_LEFT) {
 		playerOverworldPosition -= LEVEL_WIDTH;
-		playerX = SCREEN_EDGE_RIGHT-5;
+		playerX = (SCREEN_EDGE_RIGHT-5)<<2;
 		gameState = GAME_STATE_WORLD_MOVEMENT;
 		return;
 	}
 
-	if (playerY > SCREEN_EDGE_BOTTOM) {
+	if ((playerY>>2) > SCREEN_EDGE_BOTTOM) {
 		++playerOverworldPosition;
-		playerY = SCREEN_EDGE_TOP+5;
+		playerY = (SCREEN_EDGE_TOP+5)<<2;
 		// TODO: Cool ppu scrolling anim
 		gameState = GAME_STATE_WORLD_MOVEMENT;
 		return;
-	} else if (playerY < SCREEN_EDGE_TOP) {
+	} else if ((playerY>>2) < SCREEN_EDGE_TOP) {
 		--playerOverworldPosition;
-		playerY = SCREEN_EDGE_BOTTOM-5;
+		playerY = (SCREEN_EDGE_BOTTOM-5)<<2;
 		gameState = GAME_STATE_WORLD_MOVEMENT;
 		return;
 
@@ -80,17 +110,18 @@ void do_banked_movement() {
 	// Okay, collision test time. Hold onto yer butts!
 	// If you're trying to parse this, I'm seriously sorry. I probably couldn't even help you by the time you read this...
 	if (playerYVelocity != 0) {
-		scratch = playerY + playerYVelocity;
+		scratch = (playerY + playerYVelocity)>>2;
+		scratch2 = playerX>>2;
 		if (playerYVelocity & 0x80) {
 			// TL || TR
-			if (test_collision(currentLevel[(playerX>>4)+((((scratch)>>4))<<4)], 1) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+(((scratch>>4))<<4)], 1)) {
+			if (test_collision(currentLevel[(scratch2>>4)+((((scratch)>>4))<<4)], 1) || test_collision(currentLevel[((scratch2+PLAYER_WIDTH)>>4)+(((scratch>>4))<<4)], 1)) {
 				playerYVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
 				playerDirection = PLAYER_DIRECTION_UP;
 		} else {
 			// BL || BR
-			if (test_collision(currentLevel[((playerX)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)], 1) || test_collision(currentLevel[((playerX+PLAYER_WIDTH)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)], 1)) {
+			if (test_collision(currentLevel[((scratch2)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)], 1) || test_collision(currentLevel[((scratch2+PLAYER_WIDTH)>>4)+((((scratch+PLAYER_HEIGHT)>>4))<<4)], 1)) {
 				playerYVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
@@ -99,17 +130,18 @@ void do_banked_movement() {
 	}
 
 	if (playerXVelocity != 0) {
-		scratch = playerX + playerXVelocity;
+		scratch = (playerX + playerXVelocity)>>2;
+		scratch2 = playerY>>2;
 		if (playerXVelocity & 0x80) {
 			// TL || BL
-			if (test_collision(currentLevel[(scratch>>4)+((((playerY)>>4))<<4)], 1) || test_collision(currentLevel[(scratch>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)], 1)) {
+			if (test_collision(currentLevel[(scratch>>4)+((((scratch2)>>4))<<4)], 1) || test_collision(currentLevel[(scratch>>4)+((((scratch2+PLAYER_HEIGHT)>>4))<<4)], 1)) {
 				playerXVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
 				playerDirection = PLAYER_DIRECTION_LEFT;
 		} else {
 			// TR || BR
-			if (test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+(((playerY>>4))<<4)], 1) || test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+((((playerY+PLAYER_HEIGHT)>>4))<<4)], 1)) {
+			if (test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+(((scratch2>>4))<<4)], 1) || test_collision(currentLevel[((scratch+PLAYER_WIDTH)>>4)+((((scratch2+PLAYER_HEIGHT)>>4))<<4)], 1)) {
 				playerXVelocity = 0;
 			}
 			if (playerVelocityLockTime == 0)
@@ -121,20 +153,22 @@ void do_banked_movement() {
 
 	playerX += playerXVelocity;
 	playerY += playerYVelocity;
+	scratch = playerX>>2;
+	scratch2 = playerY>>2;
 
 	currentSpriteId = PLAYER_SPRITE_ID;
-	scratch = PLAYER_SPRITE_TILE + ((playerAnimState & 0x04) >> 1) + playerDirection;
+	scratch3 = PLAYER_SPRITE_TILE + ((playerAnimState & 0x04) >> 1) + playerDirection;
 	if (playerInvulnTime && FRAME_COUNTER & 0x02)
-		scratch = PLAYER_SPRITE_EMPTY;
-	currentSpriteId = oam_spr(playerX, playerY, scratch, 0, PLAYER_SPRITE_ID);
-	currentSpriteId = oam_spr(playerX+8, playerY, scratch+1, 0, currentSpriteId);
-	currentSpriteId = oam_spr(playerX, playerY+8, scratch+0x10, 0, currentSpriteId);
-	currentSpriteId = oam_spr(playerX+8, playerY+8, scratch+0x11, 0, currentSpriteId);
+		scratch3 = PLAYER_SPRITE_EMPTY;
+	currentSpriteId = oam_spr(scratch, scratch2, scratch3, 0, PLAYER_SPRITE_ID);
+	currentSpriteId = oam_spr(scratch+8, scratch2, scratch3+1, 0, currentSpriteId);
+	currentSpriteId = oam_spr(scratch, scratch2+8, scratch3+0x10, 0, currentSpriteId);
+	currentSpriteId = oam_spr(scratch+8, scratch2+8, scratch3+0x11, 0, currentSpriteId);
 }
 
 void do_sprite_collision() {
-	scratch = playerX + playerXVelocity;
-	scratch2 = playerY + playerYVelocity;
+	scratch = playerX>>2;
+	scratch2 = playerY>>2;
 	for (i = 0; i < 12; ++i) {
 		scratch3 = (extendedSpriteData[(i<<2)+1] & SPRITE_SIZE_MASK) == SPRITE_SIZE_NORMAL ? 16 : 8; // TODO: this logic is probably simpler than needed
 		// Yes, I'm directly reading values from OAM without so much as a #define. Shut up.
@@ -147,8 +181,8 @@ void do_sprite_collision() {
 			scratch3 = 6;
 		}
 
-		if (playerX < scratch4 + scratch3 && playerX + PLAYER_WIDTH > scratch4 && 
-			playerY < scratch5 + scratch3 && playerY + PLAYER_WIDTH > scratch5) {
+		if (scratch < scratch4 + scratch3 && scratch + PLAYER_WIDTH > scratch4 && 
+			scratch2 < scratch5 + scratch3 && scratch2 + PLAYER_WIDTH > scratch5) {
 			// When we collide... 
 
 			switch (extendedSpriteData[(i<<2)]) {
@@ -170,18 +204,14 @@ void do_sprite_collision() {
 
 					// If you aren't moving... force it.
 					if (playerXVelocity == 0 && playerYVelocity == 0)
-						playerYVelocity = 1;
+						playerYVelocity = 4;
 
 					// And then mother nature was like "slooooooow doooown"
-					if (playerXVelocity == PLAYER_VELOCITY*2)
-						playerXVelocity -= 1;
-					else if (playerXVelocity > 100)
-						playerXVelocity += 1;
+					if (abs(playerXVelocity) > PLAYER_VELOCITY)
+						playerXVelocity >>= 1;
 
-					if (playerYVelocity == PLAYER_VELOCITY*2)
-						playerYVelocity -= 1;
-					else if (playerYVelocity > 100)
-						playerYVelocity += 1;
+					if (abs(playerYVelocity) > PLAYER_VELOCITY)
+						playerYVelocity >>= 1;
 
 
 					break;

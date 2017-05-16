@@ -8,7 +8,9 @@
 
 #define PLAYER_SPRITE_ID 0x10
 #define PLAYER_SPRITE_TILE 0
-#define PLAYER_VELOCITY 1
+#define PLAYER_VELOCITY 4
+#define PLAYER_MAX_VELOCITY 8
+#define PLAYER_VELOCITY_ACCEL 1
 #define FIRST_ENEMY_SPRITE_ID 0x20
 
 #define PLAYER_WIDTH 15
@@ -68,18 +70,23 @@
 #define SFX_EARTH_CHANGE 8
 #define SFX_HEART 9
 
+// Crappy macro to get absolute value in an absolutely disgusting way
+#define abs(x) (x > 0 ? x : 0-x)
+
 // This file defines globals that can be used all over. You'll want common things in here, as the NES has very, very
 // limited ram. 
 
 extern unsigned char currentPadState, staticPadState;
-extern unsigned char i, j, scratch, scratch2, scratch3, scratch4, scratch5; 
+extern unsigned char i, j;
+extern int scratch, scratch2, scratch3, scratch4, scratch5; 
 extern unsigned int scratchInt;
 extern unsigned char playerOverworldPosition, currentLevelId;
 extern unsigned char currentSpriteId;
 extern unsigned char gameState;
-extern unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime, playerInvulnTime;
+extern unsigned char playerDirection, playerAnimState, playerVelocityLockTime, playerInvulnTime;
 extern unsigned char playerHealth, worldChunkCount, worldTotalChunks;
 extern unsigned char FRAME_COUNTER;
+extern int playerX, playerY, playerXVelocity, playerYVelocity;
 
 #pragma zpsym ("currentPadState")
 #pragma zpsym ("staticPadState")

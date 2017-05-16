@@ -29,13 +29,14 @@
 unsigned char currentPadState, staticPadState;
 unsigned char i;
 unsigned char j;
-unsigned char playerX, playerY, playerDirection, playerAnimState, playerXVelocity, playerYVelocity, playerVelocityLockTime, playerInvulnTime;
+unsigned char playerDirection, playerAnimState, playerVelocityLockTime, playerInvulnTime;
 unsigned char playerOverworldPosition, currentLevelId;
 unsigned char currentSpriteId;
 unsigned char gameState;
-unsigned char scratch, scratch2, scratch3, scratch4, scratch5;
+int scratch, scratch2, scratch3, scratch4, scratch5;
 unsigned char playerHealth, worldChunkCount, worldTotalChunks;
 unsigned int scratchInt;
+int playerX, playerY, playerXVelocity, playerYVelocity;
 #pragma bssseg (pop)
 #pragma dataseg(pop)
 
@@ -126,8 +127,8 @@ void main(void) {
 			set_prg_bank(BANK_FIRST_LEVEL+currentLevelId);
 
 			playerOverworldPosition = *(char*)(lvl_details);
-			playerX = *(char*)(lvl_details+1);
-			playerY = *(char*)(lvl_details+2);
+			playerX = (*(char*)(lvl_details+1)) << 2;
+			playerY = *(char*)(lvl_details+2) << 2;
 			worldTotalChunks = *(char*)(lvl_details+3);
 
 
