@@ -18,11 +18,11 @@ void show_title() {
 	pal_col(17,0x19);
 
 	// Show a message to the user.
-	put_str(NTADR_A(7,6),  "- Missing Lands -");
+	put_str(NTADR_A(5,6),  "- Missing Lands DX -");
 	put_str(NTADR_A(8,17),  "- Press Start -");
 
 	// Also show some cool build info because we can.
-	put_str(NTADR_A(2,23), "Ludum Dare 38 Entry");
+	put_str(NTADR_A(2,23), "Post Ludum Dare Version");
 	put_str(NTADR_A(2,24), "Built: " BUILD_DATE);
 	put_str(NTADR_A(2,25), "Build #" BUILD_NUMBER_STR " (" GIT_COMMIT_ID_SHORT " - " GIT_BRANCH ")");
 	put_str(NTADR_A(2,26), "Commit counter: " COMMIT_COUNT_STR);
@@ -149,7 +149,7 @@ void show_win_screen() {
 	// Show a message to the user.
 	put_str(NTADR_A(8,4), "Congratulations!");
 	put_str(NTADR_A(2,10), "You have completed Missing");
-	put_str(NTADR_A(2,11), "Worlds!");
+	put_str(NTADR_A(2,11), "Lands!");
 	put_str(NTADR_A(2,15), "By your diligence, the pieces");
 	put_str(NTADR_A(2,16), "of your tiny world have come");
 	put_str(NTADR_A(2,17), "back together.");
