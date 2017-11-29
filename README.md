@@ -27,7 +27,7 @@ You should be able to follow those verbatim to get up and running.
 
 This repository is linked in with CircleCI. As such, any changes to master are automatically compiled into a rom.
 
-[Download Latest ROM](https://circleci-tkn.rhcloud.com/api/v1/project/cppchriscpp/missing-lands/tree/master/latest/artifacts/hworld.nes)
+[Download Latest ROM](http://cpprograms.net/devnull/circleci-redirect.php?namespace=cppchriscpp&project=missing-lands&file=world.nes)
 
 ## Credits
 
