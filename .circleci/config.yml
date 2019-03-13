@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: cppchriscpp/cc65-node:latest
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: 
+            - "62:d1:f8:4c:c4:bd:64:69:ca:6f:56:05:12:31:79:8d"
+      - run:
+          name: Move tools folder to expected location
+          command: cp -rf /tools .
+      - run:
+          name: Build the game itself
+          command: make
+      - store_artifacts:
+          path: ./world.nes
+workflows:
+  version: 2
+  build:
+    jobs: 
+      - build
