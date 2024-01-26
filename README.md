@@ -4,7 +4,7 @@
 
 This is the code behind a little game called Missing Lands. It was built in 48 hours for Ludum Dare.
 
-It is based off of [nes-c-boilerplate](https://github.com/cppchriscpp/nes-c-boilerplate). If you are attempting to
+It is based off of [nes-c-boilerplate](https://gh.nes.science/nes-c-boilerplate). If you are attempting to
 work with the source code, I strongly recommend looking at the readme for that. 
 
 Check it out on [the Ludum Dare Website](https://ldjam.com/events/ludum-dare/38/missing-lands)
@@ -17,7 +17,7 @@ has some issues with lag and input delay, so I recommend this option more, espec
 ## Building
 
 The instructions for building this are nearly identical to those of 
-[nes-c-boilerplate](https://github.com/cppchriscpp/nes-c-boilerplate).
+[nes-c-boilerplate](https://gh.nes.science/nes-c-boilerplate).
 You should be able to follow those verbatim to get up and running.
 
 *Note*: You will need to have nodejs installed on your system to run the level builder. This requirement differs
@@ -27,15 +27,13 @@ You should be able to follow those verbatim to get up and running.
 
 This repository is linked in with CircleCI. As such, any changes to master are automatically compiled into a rom.
 
-[Download Latest ROM](http://cpprograms.net/devnull/circleci-redirect.php?namespace=cppchriscpp&project=missing-lands&file=world.nes)
-
 ## Credits
 
 [NESLib](https://shiru.untergrund.net/software.shtml) by [Shiru](http://shiru.untergrund.net/)
 
 [Who's Cuter Font](https://forums.nesdev.com/viewtopic.php?f=21&t=10284&start=0) by [Damian Yerrick (Tepples)](http://pineight.com)
 
-[nes-c-boilerplate](https://github.com/cppchriscpp/nes-c-boilerplate)
+[nes-c-boilerplate](https://gh.nes.science/nes-c-boilerplate)
 
 ## License
 
